@@ -19,7 +19,6 @@ import {
 } from "lucide-react";
 import {
   Booking,
-  BookingStatus,
   fetchMyBookings,
   fetchHostReservations,
   confirmBooking,
@@ -40,6 +39,7 @@ export default function BookingsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [currentTime] = useState<number>(() => Date.now());
 
   const [actionError, setActionError] = useState<string | null>(null);
   const [isActionPending, startActionTransition] = useTransition();
@@ -110,8 +110,21 @@ export default function BookingsPage() {
     });
   };
 
-  const renderStatusBadge = (status: BookingStatus) => {
-    switch (status) {
+  const isPendingExpired = (booking: Booking) => {
+    if (booking.status !== "pending") return false;
+    const createdAtTime = new Date(booking.createdAt).getTime();
+    return currentTime - createdAtTime > 24 * 60 * 60 * 1000;
+  };
+
+  const renderStatusBadge = (booking: Booking) => {
+    if (isPendingExpired(booking)) {
+      return (
+        <span className="inline-flex items-center gap-1 rounded-full bg-stone-500/10 px-2.5 py-1 text-xs font-semibold text-stone-500">
+          <Clock size={13} /> Expired Request
+        </span>
+      );
+    }
+    switch (booking.status) {
       case "confirmed":
         return (
           <span className="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2.5 py-1 text-xs font-semibold text-green-600 dark:text-green-400">
@@ -281,7 +294,7 @@ export default function BookingsPage() {
                       >
                         {booking.studioTitle}
                       </Link>
-                      {renderStatusBadge(booking.status)}
+                      {renderStatusBadge(booking)}
                     </div>
 
                     <div className="flex items-center gap-3 text-xs text-muted">
@@ -327,14 +340,18 @@ export default function BookingsPage() {
                   <div className="flex items-center gap-2">
                     {/* Host action buttons */}
                     {activeTab === "host" && booking.status === "pending" && (
-                      <button
-                        type="button"
-                        disabled={isActionPending}
-                        onClick={() => handleConfirm(booking._id)}
-                        className="rounded-full bg-foreground px-4 py-2 text-xs font-semibold text-background hover:opacity-85 transition-opacity disabled:opacity-50"
-                      >
-                        Accept Booking
-                      </button>
+                      isPendingExpired(booking) ? (
+                        <span className="text-xs text-muted font-medium italic">Expired request (&gt;24h)</span>
+                      ) : (
+                        <button
+                          type="button"
+                          disabled={isActionPending}
+                          onClick={() => handleConfirm(booking._id)}
+                          className="rounded-full bg-foreground px-4 py-2 text-xs font-semibold text-background hover:opacity-85 transition-opacity disabled:opacity-50"
+                        >
+                          Accept Booking
+                        </button>
+                      )
                     )}
 
                     {/* Cancellation button */}
