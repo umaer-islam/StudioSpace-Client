@@ -11,6 +11,7 @@ import {
   Users,
   CalendarCheck,
 } from "lucide-react";
+import { FeaturedStudios } from "@/components/home/featured-studios";
 
 const categories = [
   {
@@ -178,6 +179,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* FEATURED STUDIOS (API INTEGRATED) */}
+      <FeaturedStudios />
 
       {/* HOW IT WORKS */}
       <section
