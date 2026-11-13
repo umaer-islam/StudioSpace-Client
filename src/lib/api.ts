@@ -286,3 +286,87 @@ export async function completeBooking(bookingId: string): Promise<Booking> {
   return data.data;
 }
 
+export interface CreateStudioPayload {
+  title: string;
+  category: string;
+  hourlyRate: number;
+  securityDeposit?: number;
+  maxCapacity: number;
+  location: string;
+  address: string;
+  imageUrl?: string;
+  amenities?: string[];
+  overview: string;
+}
+
+export async function createStudio(
+  payload: CreateStudioPayload
+): Promise<{ success: boolean; data: Studio; message?: string }> {
+  const res = await fetch(`${getApiBaseUrl()}/studios`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || data.errors?.join(", ") || `Studio creation failed (${res.status})`);
+  }
+
+  return data;
+}
+
+export async function updateStudio(
+  id: string,
+  payload: Partial<CreateStudioPayload>
+): Promise<{ success: boolean; data: Studio; message?: string }> {
+  const res = await fetch(`${getApiBaseUrl()}/studios/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || data.errors?.join(", ") || `Studio update failed (${res.status})`);
+  }
+
+  return data;
+}
+
+export async function deleteStudio(
+  id: string
+): Promise<{ success: boolean; message?: string }> {
+  const res = await fetch(`${getApiBaseUrl()}/studios/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || `Studio deletion failed (${res.status})`);
+  }
+
+  return data;
+}
+
+export async function fetchHostListings(): Promise<{
+  success: boolean;
+  data: Studio[];
+}> {
+  const res = await fetch(`${getApiBaseUrl()}/studios/host/my-listings`, {
+    cache: "no-store",
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || `Failed to fetch host listings (${res.status})`);
+  }
+
+  return res.json();
+}
+
+

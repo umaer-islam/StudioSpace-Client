@@ -84,19 +84,33 @@ export function SiteHeader() {
 
           {user ? (
             <div className="hidden items-center gap-3 sm:flex">
-              <Link
-                href="/bookings"
-                className="flex items-center gap-1.5 text-xs font-semibold rounded-full border border-border px-3.5 py-1.5 hover:bg-surface-secondary transition-colors"
-              >
-                <Calendar size={14} /> Bookings
-              </Link>
-
-              {user.role === "Host" && (
+              {user.role === "Host" ? (
+                <>
+                  <Link
+                    href="/my-listings"
+                    className="flex items-center gap-1.5 text-xs font-semibold rounded-full border border-border px-3.5 py-1.5 hover:bg-surface-secondary transition-colors"
+                  >
+                    My Listings
+                  </Link>
+                  <Link
+                    href="/host-reservations"
+                    className="flex items-center gap-1.5 text-xs font-semibold rounded-full border border-border px-3.5 py-1.5 hover:bg-surface-secondary transition-colors"
+                  >
+                    <Calendar size={13} /> Reservations
+                  </Link>
+                  <Link
+                    href="/add-studio"
+                    className="flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-3.5 py-1.5 text-xs font-semibold text-accent transition-colors hover:bg-accent/20"
+                  >
+                    <PlusCircle size={14} /> Add Studio
+                  </Link>
+                </>
+              ) : (
                 <Link
-                  href="/studios/new"
-                  className="flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-3.5 py-1.5 text-xs font-semibold text-accent transition-colors hover:bg-accent/20"
+                  href="/my-bookings"
+                  className="flex items-center gap-1.5 text-xs font-semibold rounded-full border border-border px-3.5 py-1.5 hover:bg-surface-secondary transition-colors"
                 >
-                  <PlusCircle size={14} /> List Space
+                  <Calendar size={14} /> My Bookings
                 </Link>
               )}
 
@@ -191,23 +205,39 @@ export function SiteHeader() {
                   </span>
                 </div>
 
-                {user.role === "Host" && (
+                {user.role === "Host" ? (
+                  <>
+                    <Link
+                      href="/my-listings"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-xs font-semibold text-foreground hover:bg-surface-secondary"
+                    >
+                      My Studio Listings
+                    </Link>
+                    <Link
+                      href="/host-reservations"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-xs font-semibold text-foreground hover:bg-surface-secondary"
+                    >
+                      <Calendar size={15} /> Host Reservations
+                    </Link>
+                    <Link
+                      href="/add-studio"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center justify-center gap-2 rounded-xl bg-accent/10 py-2.5 text-xs font-semibold text-accent"
+                    >
+                      <PlusCircle size={15} /> Add a New Studio
+                    </Link>
+                  </>
+                ) : (
                   <Link
-                    href="/studios/new"
+                    href="/my-bookings"
                     onClick={() => setMenuOpen(false)}
-                    className="flex items-center justify-center gap-2 rounded-xl bg-accent/10 py-2.5 text-xs font-semibold text-accent"
+                    className="flex items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-xs font-semibold text-foreground hover:bg-surface-secondary"
                   >
-                    <PlusCircle size={15} /> List a New Studio
+                    <Calendar size={15} /> My Bookings
                   </Link>
                 )}
-
-                <Link
-                  href="/bookings"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-xs font-semibold text-foreground hover:bg-surface-secondary"
-                >
-                  <Calendar size={15} /> My Reservations
-                </Link>
 
                 <button
                   type="button"
