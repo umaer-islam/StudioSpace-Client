@@ -104,3 +104,185 @@ export async function fetchStudioById(
   return res.json();
 }
 
+export type BookingStatus = "pending" | "confirmed" | "completed" | "cancelled";
+
+export interface Booking {
+  _id: string;
+  studioId: string;
+  creatorId: string;
+  hostId: string;
+  startTime: string;
+  endTime: string;
+  hours: number;
+  hourlyRate: number;
+  securityDeposit: number;
+  rentalFee: number;
+  totalPrice: number;
+  currency: "BDT" | string;
+  studioTitle: string;
+  studioLocation: string;
+  studioImageUrl: string;
+  creatorName: string;
+  creatorEmail: string;
+  hostName: string;
+  hostEmail: string;
+  status: BookingStatus;
+  notes?: string;
+  cancellationReason?: string;
+  cancelledBy?: "creator" | "host";
+  cancelledAt?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BookingsResponse {
+  success: boolean;
+  data: Booking[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+export interface OccupiedSlot {
+  startTime: string;
+  endTime: string;
+  status: BookingStatus;
+}
+
+export async function createBooking(input: {
+  studioId: string;
+  startTime: string;
+  endTime: string;
+  notes?: string;
+}): Promise<{ success: boolean; data: Booking; message?: string }> {
+  const res = await fetch(`${getApiBaseUrl()}/bookings`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(input),
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || `Booking failed with status ${res.status}`);
+  }
+
+  return data;
+}
+
+export async function fetchMyBookings(filters: {
+  page?: number;
+  limit?: number;
+  status?: string;
+} = {}): Promise<BookingsResponse> {
+  const params = new URLSearchParams();
+  if (filters.page) params.set("page", String(filters.page));
+  if (filters.limit) params.set("limit", String(filters.limit));
+  if (filters.status && filters.status !== "all") params.set("status", filters.status);
+
+  const queryString = params.toString();
+  const url = `${getApiBaseUrl()}/bookings/my-bookings${queryString ? `?${queryString}` : ""}`;
+
+  const res = await fetch(url, {
+    cache: "no-store",
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || `Failed to fetch bookings (${res.status})`);
+  }
+
+  return res.json();
+}
+
+export async function fetchHostReservations(filters: {
+  page?: number;
+  limit?: number;
+  status?: string;
+} = {}): Promise<BookingsResponse> {
+  const params = new URLSearchParams();
+  if (filters.page) params.set("page", String(filters.page));
+  if (filters.limit) params.set("limit", String(filters.limit));
+  if (filters.status && filters.status !== "all") params.set("status", filters.status);
+
+  const queryString = params.toString();
+  const url = `${getApiBaseUrl()}/bookings/host-reservations${queryString ? `?${queryString}` : ""}`;
+
+  const res = await fetch(url, {
+    cache: "no-store",
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || `Failed to fetch host reservations (${res.status})`);
+  }
+
+  return res.json();
+}
+
+export async function fetchStudioAvailability(
+  studioId: string
+): Promise<{ success: boolean; data: OccupiedSlot[] }> {
+  const res = await fetch(`${getApiBaseUrl()}/studios/${studioId}/availability`, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch availability (${res.status})`);
+  }
+
+  return res.json();
+}
+
+export async function confirmBooking(bookingId: string): Promise<Booking> {
+  const res = await fetch(`${getApiBaseUrl()}/bookings/${bookingId}/confirm`, {
+    method: "PATCH",
+    credentials: "include",
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || `Failed to confirm booking (${res.status})`);
+  }
+
+  return data.data;
+}
+
+export async function cancelBooking(
+  bookingId: string,
+  reason?: string
+): Promise<Booking> {
+  const res = await fetch(`${getApiBaseUrl()}/bookings/${bookingId}/cancel`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ reason }),
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || `Failed to cancel booking (${res.status})`);
+  }
+
+  return data.data;
+}
+
+export async function completeBooking(bookingId: string): Promise<Booking> {
+  const res = await fetch(`${getApiBaseUrl()}/bookings/${bookingId}/complete`, {
+    method: "PATCH",
+    credentials: "include",
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || `Failed to complete booking (${res.status})`);
+  }
+
+  return data.data;
+}
+

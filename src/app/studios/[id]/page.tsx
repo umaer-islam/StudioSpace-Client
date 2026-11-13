@@ -8,15 +8,12 @@ import {
   Star,
   MapPin,
   Users,
-  ShieldCheck,
   CheckCircle2,
   AlertCircle,
   RefreshCcw,
-  Calendar,
-  Clock,
-  Sparkles,
 } from "lucide-react";
 import { Studio, fetchStudioById } from "@/lib/api";
+import { BookingWidget } from "@/components/studios/booking-widget";
 
 interface StudioDetailPageProps {
   params: Promise<{ id: string }>;
@@ -204,58 +201,7 @@ function StudioDetailContent({ params }: StudioDetailPageProps) {
 
           {/* Right Column: Reservation Card */}
           <div className="lg:col-span-1">
-            <div className="sticky top-24 rounded-3xl border border-border bg-surface p-6 sm:p-8 shadow-lg space-y-6">
-              <div className="flex items-baseline justify-between border-b border-border pb-6">
-                <div>
-                  <span className="text-3xl font-bold text-foreground">
-                    ${studio.hourlyRate}
-                  </span>
-                  <span className="text-sm text-muted"> / hour</span>
-                </div>
-                {studio.securityDeposit > 0 && (
-                  <div className="text-right text-xs text-muted">
-                    <span>${studio.securityDeposit} dep.</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Feature Highlights */}
-              <div className="space-y-3 text-xs text-muted">
-                <div className="flex items-center gap-2">
-                  <Clock size={16} className="text-accent" />
-                  <span>2-hour minimum booking</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar size={16} className="text-accent" />
-                  <span>Instant booking confirmation</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <ShieldCheck size={16} className="text-accent" />
-                  <span>Verified studio guarantee</span>
-                </div>
-              </div>
-
-              {/* Action Button */}
-              <button
-                type="button"
-                className="w-full rounded-full bg-foreground py-3.5 text-center text-sm font-semibold text-background hover:opacity-85 transition-opacity shadow-md"
-              >
-                Request Reservation
-              </button>
-
-              <p className="text-center text-[11px] text-muted">
-                You won&apos;t be charged until the host approves your session.
-              </p>
-
-              <div className="rounded-xl bg-surface-secondary p-4 text-xs space-y-1.5 text-muted">
-                <div className="flex items-center gap-1.5 font-semibold text-foreground">
-                  <Sparkles size={14} className="text-accent" /> Creator Protection
-                </div>
-                <p className="text-[11px] leading-4">
-                  Full refund available up to 48 hours before scheduled production start time.
-                </p>
-              </div>
-            </div>
+            <BookingWidget studio={studio} />
           </div>
         </div>
       </div>

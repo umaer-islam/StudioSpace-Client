@@ -14,6 +14,7 @@ import {
   LogOut,
   User,
   PlusCircle,
+  Calendar,
 } from "lucide-react";
 import { useSession, signOut } from "@/lib/auth-client";
 
@@ -83,6 +84,13 @@ export function SiteHeader() {
 
           {user ? (
             <div className="hidden items-center gap-3 sm:flex">
+              <Link
+                href="/bookings"
+                className="flex items-center gap-1.5 text-xs font-semibold rounded-full border border-border px-3.5 py-1.5 hover:bg-surface-secondary transition-colors"
+              >
+                <Calendar size={14} /> Bookings
+              </Link>
+
               {user.role === "Host" && (
                 <Link
                   href="/studios/new"
@@ -192,6 +200,14 @@ export function SiteHeader() {
                     <PlusCircle size={15} /> List a New Studio
                   </Link>
                 )}
+
+                <Link
+                  href="/bookings"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-xs font-semibold text-foreground hover:bg-surface-secondary"
+                >
+                  <Calendar size={15} /> My Reservations
+                </Link>
 
                 <button
                   type="button"
