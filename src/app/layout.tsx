@@ -54,7 +54,7 @@ export default function RootLayout({
         >
           <SmoothScrollProvider>
             <SiteHeader />
-            <main className="flex-1">{children}</main>
+            <main className="flex-1 pt-24 sm:pt-28">{children}</main>
             <SiteFooter />
             <Toaster position="top-right" richColors closeButton />
           </SmoothScrollProvider>
