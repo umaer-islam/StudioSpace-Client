@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState, useTransition, useSyncExternalStore } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -39,7 +39,11 @@ export default function BookingsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [currentTime] = useState<number>(() => Date.now());
+  const currentTime = useSyncExternalStore(
+    () => () => {},
+    () => Date.now(),
+    () => null
+  );
 
   const [actionError, setActionError] = useState<string | null>(null);
   const [isActionPending, startActionTransition] = useTransition();
@@ -111,7 +115,7 @@ export default function BookingsPage() {
   };
 
   const isPendingExpired = (booking: Booking) => {
-    if (booking.status !== "pending") return false;
+    if (booking.status !== "pending" || !currentTime) return false;
     const createdAtTime = new Date(booking.createdAt).getTime();
     return currentTime - createdAtTime > 24 * 60 * 60 * 1000;
   };
