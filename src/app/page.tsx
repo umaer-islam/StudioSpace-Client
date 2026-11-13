@@ -12,6 +12,7 @@ import {
   CalendarCheck,
 } from "lucide-react";
 import { FeaturedStudios } from "@/components/home/featured-studios";
+import { HeroInteractive } from "@/components/home/hero-interactive";
 
 const categories = [
   {
@@ -76,58 +77,8 @@ const steps = [
 export default function Home() {
   return (
     <>
-      {/* HERO */}
-      <section className="container-main py-10 md:py-16">
-        <div className="grid overflow-hidden rounded-[28px] bg-surface-secondary lg:min-h-[530px] lg:grid-cols-2">
-          <div className="flex flex-col justify-center px-7 py-14 sm:px-12 lg:px-16 lg:py-20">
-            <div className="mb-7 flex w-fit items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-xs font-semibold tracking-wide text-muted">
-              <span className="h-2 w-2 rounded-full bg-accent" />
-              YOUR SPACE. YOUR CREATIVE VISION.
-            </div>
-
-            <h1 className="max-w-xl text-balance text-4xl font-semibold leading-[1.13] tracking-tight sm:text-5xl lg:text-6xl">
-              Find the space. <br />
-              <span className="text-accent">Create the extraordinary.</span>
-            </h1>
-
-            <p className="mt-6 max-w-md text-base leading-8 text-muted">
-              Discover inspiring photography studios, podcast rooms and
-              production spaces. Your next creative project starts here.
-            </p>
-
-            <div className="mt-9 flex flex-wrap gap-3">
-              <Link
-                href="/studios"
-                className="inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-4 text-sm font-semibold text-background transition-transform hover:-translate-y-1"
-              >
-                Explore Studios <ArrowRight size={17} />
-              </Link>
-              <Link
-                href="/register"
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-6 py-4 text-sm font-semibold transition-colors hover:border-accent"
-              >
-                Host Your Space <ArrowUpRight size={17} />
-              </Link>
-            </div>
-
-            <div className="mt-12 flex items-center gap-3 text-xs text-muted">
-              <ShieldCheck size={17} className="text-accent" />
-              A better way to discover creative workspaces.
-            </div>
-          </div>
-
-          <div className="hero-image relative min-h-[340px] lg:min-h-full">
-            <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-white/20 bg-black/40 p-5 text-white backdrop-blur-md sm:bottom-10 sm:left-10 sm:right-10">
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/70">
-                Find your creative environment
-              </p>
-              <p className="mt-2 text-xl font-semibold">
-                Every great idea deserves a great space.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* INTERACTIVE HERO */}
+      <HeroInteractive />
 
       {/* CATEGORIES */}
       <section className="section-padding">
