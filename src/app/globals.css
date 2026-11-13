@@ -1,26 +1,109 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
+  color-scheme: light;
+  --background: #faf9f6;
   --foreground: #171717;
+  --surface: #ffffff;
+  --surface-secondary: #f1f0ec;
+  --muted: #737373;
+  --border: #e8e6e1;
+  --accent: #d97745;
+  --accent-hover: #bd6032;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: #111110;
+  --foreground: #f5f5f2;
+  --surface: #1b1b19;
+  --surface-secondary: #242421;
+  --muted: #a3a3a0;
+  --border: #333330;
+  --accent: #e58b5b;
+  --accent-hover: #f09c70;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-secondary: var(--surface-secondary);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
+  min-height: 100vh;
+  margin: 0;
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.container-main {
+  width: min(100% - 40px, 1240px);
+  margin-inline: auto;
+}
+
+.section-padding {
+  padding-block: 88px;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.hero-image {
+  background-image: linear-gradient(
+      180deg,
+      transparent 45%,
+      rgba(0, 0, 0, 0.45) 100%
+    ),
+    url("https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=85");
+  background-position: center;
+  background-size: cover;
+}
+
+@media (max-width: 640px) {
+  .container-main {
+    width: min(100% - 32px, 1240px);
+  }
+  .section-padding {
+    padding-block: 60px;
+  }
 }
