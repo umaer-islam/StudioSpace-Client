@@ -7,3 +7,6 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## antislop
+Read DESIGN.md for project direction. Follow antislop rules (antislop, antislop-ui, antislop-copywriting, antislop-human, antislop-layoutmobile, antislop-code) during all visual and component work. Zero generic AI slop: purposeful colors, honest copywriting, tactile accessibility, and clean motion.
