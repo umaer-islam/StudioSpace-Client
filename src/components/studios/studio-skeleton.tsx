@@ -18,3 +18,4 @@ export function StudioSkeleton() {
     </div>
   );
 }
+

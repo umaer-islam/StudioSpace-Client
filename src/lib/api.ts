@@ -10,6 +10,7 @@ export interface Studio {
   imageUrl: string;
   amenities: string[];
   overview: string;
+  hostId?: string;
   hostName: string;
   hostEmail: string;
   rating: number;
@@ -45,8 +46,16 @@ export interface StudioFilters {
   limit?: number;
 }
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+export function getApiBaseUrl(): string {
+  if (typeof window !== "undefined") {
+    return "/api";
+  }
+  return (
+    process.env.INTERNAL_API_URL
+      ? `${process.env.INTERNAL_API_URL}/api`
+      : process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"
+  );
+}
 
 export async function fetchStudios(
   filters: StudioFilters = {}
@@ -65,10 +74,11 @@ export async function fetchStudios(
   if (filters.limit) params.set("limit", String(filters.limit));
 
   const queryString = params.toString();
-  const url = `${API_BASE_URL}/studios${queryString ? `?${queryString}` : ""}`;
+  const url = `${getApiBaseUrl()}/studios${queryString ? `?${queryString}` : ""}`;
 
   const res = await fetch(url, {
     cache: "no-store",
+    credentials: "include",
   });
 
   if (!res.ok) {
@@ -81,9 +91,10 @@ export async function fetchStudios(
 export async function fetchStudioById(
   id: string
 ): Promise<StudioDetailResponse> {
-  const url = `${API_BASE_URL}/studios/${id}`;
+  const url = `${getApiBaseUrl()}/studios/${id}`;
   const res = await fetch(url, {
     cache: "no-store",
+    credentials: "include",
   });
 
   if (!res.ok) {
@@ -92,3 +103,4 @@ export async function fetchStudioById(
 
   return res.json();
 }
+
