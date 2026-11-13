@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# StudioSpace — Frontend Client Application
 
-## Getting Started
+StudioSpace is a full-stack marketplace platform connecting creative professionals (photographers, filmmakers, podcasters, and musicians) with verified creative workspace rentals.
 
-First, run the development server:
+**Live Application:** [https://studiospace23.vercel.app](https://studiospace23.vercel.app)  
+**Backend API:** [https://studiospace-server-afsq.onrender.com](https://studiospace-server-afsq.onrender.com)  
+**GitHub Client:** [https://github.com/umaer-islam/StudioSpace-Client](https://github.com/umaer-islam/StudioSpace-Client)  
+**GitHub Server:** [https://github.com/umaer-islam/StudioSpace-Server](https://github.com/umaer-islam/StudioSpace-Server)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🌟 Features & Route Coverage
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Public Exploration
+- **Homepage (`/`)**: Hero discovery, category carousels, how it works, curated studios, testimonials, and responsive navigation.
+- **Studio Directory (`/studios`)**: Search by title/neighborhood, filter by category (Photo Studio, Film Stage, Podcast Lounge, Music Suite, Workshop), price sliders, and real-time sorting.
+- **Studio Details (`/studios/[id]`)**: High-resolution gallery, amenities checklist, host profile, interactive calendar date/time picker, and server-side pricing calculator.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Creator Workflow
+- **Registration & Authentication (`/register`, `/login`)**: Better Auth session engine supporting both Email/Password and Google OAuth with secure HTTP-only cookies.
+- **Booking Creation**: Real-time availability conflict checks, interactive duration selection, and transparent cost summaries.
+- **My Bookings (`/my-bookings`)**: Live status tracking (`pending`, `confirmed`, `completed`, `cancelled`), reservation details, and self-service cancellation with reason prompts.
 
-## Learn More
+### Host Workflow
+- **My Studio Listings (`/my-listings`)**: Dashboard to review all spaces owned by the Host, active/inactive statuses, direct links to edit or delete.
+- **Add Studio (`/add-studio` & `/studios/new`)**: Form to publish new creative spaces with custom amenities, capacity, hourly rate, security deposit, address, and imagery.
+- **Edit Studio (`/studios/edit/[id]`)**: Update existing studio details, adjust pricing, toggle availability status (`active`, `inactive`, `maintenance`).
+- **Host Reservations (`/host-reservations`)**: Approve or decline incoming creator bookings, view creator contact details, and manage 24-hour pending expiration.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠 Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Framework**: Next.js 16 (App Router, Turbopack, Partial Prerendering)
+- **UI Library**: React 19, Tailwind CSS v4
+- **Icons**: Lucide React
+- **Authentication**: Better Auth React Client (`better-auth/react`)
+- **Theme**: `next-themes` (Dark / Light mode support)
+- **Deployment**: Vercel
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 👥 Examiner Test Credentials
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Examiners can register a new account on `/register` as either **Creator** or **Host**, or use the pre-configured demo credentials:
+
+| Role | Email | Password | Allowed Actions |
+| :--- | :--- | :--- | :--- |
+| **Host** | `host.demo@studiospace.com` | `StudioPass123!` | Add studios, edit/delete listings, confirm reservations |
+| **Creator** | `creator.demo@studiospace.com` | `StudioPass123!` | Explore studios, book slots, cancel bookings |
+
+*(Or click **Continue with Google** to sign in with any valid Google account).*
+
+---
+
+## 🚀 Local Development Setup
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/umaer-islam/StudioSpace-Client.git
+   cd StudioSpace-Client
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Create `.env.local`:
+   ```env
+   NEXT_PUBLIC_API_URL=http://localhost:5000/api
+   INTERNAL_API_URL=http://localhost:5000
+   ```
+
+4. Run development server:
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000).
+
+5. Production build test:
+   ```bash
+   npm run lint
+   npm run build
+   ```
