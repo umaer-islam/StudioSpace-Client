@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import { Star, MapPin, Users, ArrowUpRight } from "lucide-react";
 import { Studio } from "@/lib/api";
@@ -10,7 +11,10 @@ export function StudioCard({ studio }: StudioCardProps) {
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-xl">
       {/* Studio Image Header */}
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-surface-secondary">
+      <Link
+        href={`/studios/${studio._id}`}
+        className="relative aspect-[16/10] w-full overflow-hidden bg-surface-secondary block"
+      >
         <Image
           src={
             studio.imageUrl ||
@@ -30,18 +34,24 @@ export function StudioCard({ studio }: StudioCardProps) {
           <span>{studio.rating.toFixed(1)}</span>
           <span className="text-muted text-[11px]">({studio.reviewCount})</span>
         </div>
-      </div>
+      </Link>
 
       {/* Studio Content */}
       <div className="flex flex-1 flex-col p-5">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="line-clamp-1 font-semibold tracking-tight text-foreground group-hover:text-accent transition-colors">
+          <Link
+            href={`/studios/${studio._id}`}
+            className="line-clamp-1 font-semibold tracking-tight text-foreground group-hover:text-accent transition-colors"
+          >
             {studio.title}
-          </h3>
-          <ArrowUpRight
-            size={18}
+          </Link>
+          <Link
+            href={`/studios/${studio._id}`}
+            aria-label={`View ${studio.title}`}
             className="shrink-0 text-muted transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent"
-          />
+          >
+            <ArrowUpRight size={18} />
+          </Link>
         </div>
 
         <div className="mt-2 flex items-center gap-1.5 text-xs text-muted">
