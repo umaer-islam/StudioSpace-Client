@@ -25,6 +25,7 @@ import {
 import { useSession, signOut } from "@/lib/auth-client";
 import RubberSegment from "@/components/react-bits/rubber-segment";
 import GooeyNav from "@/components/react-bits/gooey-nav";
+import { animateThemeTransition } from "@/lib/theme-transition";
 
 const navigation = [
   { label: "Home", href: "/" },
@@ -63,6 +64,17 @@ function SiteHeaderContent() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
+  const desktopThemeRef = useRef<HTMLDivElement>(null);
+  const mobileThemeRef = useRef<HTMLButtonElement>(null);
+  const drawerThemeRef = useRef<HTMLDivElement>(null);
+
+  const handleThemeSwitch = (
+    targetTheme: "light" | "dark",
+    el?: HTMLElement | null,
+    event?: React.MouseEvent
+  ) => {
+    animateThemeTransition(targetTheme, setTheme, el, event);
+  };
   const { data: session } = useSession();
 
   const user = session?.user as
@@ -259,8 +271,8 @@ function SiteHeaderContent() {
 
         {/* Right Section: Theme Toggle + Auth Controls */}
         <div className="flex items-center gap-2.5 sm:gap-3">
-          {/* Desktop Theme Segmented Switcher with Rubber Elasticity */}
-          <div className="hidden sm:inline-flex items-center">
+          {/* Desktop Theme Segmented Switcher with Rubber Elasticity & Smooth GSAP Transition */}
+          <div ref={desktopThemeRef} className="hidden sm:inline-flex items-center">
             <RubberSegment
               items={[
                 {
@@ -273,7 +285,9 @@ function SiteHeaderContent() {
                 },
               ]}
               value={resolvedTheme === "dark" ? "dark" : "light"}
-              onChange={(val) => setTheme(val)}
+              onChange={(val) =>
+                handleThemeSwitch(val as "light" | "dark", desktopThemeRef.current)
+              }
               equalSlots={true}
               size="sm"
               radius={9999}
@@ -287,9 +301,14 @@ function SiteHeaderContent() {
 
           {/* Mobile Theme Toggle Button */}
           <button
+            ref={mobileThemeRef}
             type="button"
-            onClick={() =>
-              setTheme(resolvedTheme === "dark" ? "light" : "dark")
+            onClick={(e) =>
+              handleThemeSwitch(
+                resolvedTheme === "dark" ? "light" : "dark",
+                mobileThemeRef.current,
+                e
+              )
             }
             aria-label="Toggle color theme"
             className="flex sm:hidden h-9 w-9 items-center justify-center rounded-full border border-border text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
@@ -491,35 +510,39 @@ function SiteHeaderContent() {
             <span className="text-[11px] font-bold uppercase tracking-wider text-muted">
               Navigation
             </span>
-            <RubberSegment
-              items={[
-                {
-                  value: "light",
-                  label: (
-                    <span className="flex items-center gap-1.5 text-xs font-semibold">
-                      <Sun size={12} /> Light
-                    </span>
-                  ),
-                },
-                {
-                  value: "dark",
-                  label: (
-                    <span className="flex items-center gap-1.5 text-xs font-semibold">
-                      <Moon size={12} /> Dark
-                    </span>
-                  ),
-                },
-              ]}
-              value={resolvedTheme === "dark" ? "dark" : "light"}
-              onChange={(val) => setTheme(val)}
-              equalSlots={true}
-              size="sm"
-              radius={9999}
-              inset={2}
-              stretch={30}
-              squash={2}
-              className="border border-border shadow-2xs"
-            />
+            <div ref={drawerThemeRef}>
+              <RubberSegment
+                items={[
+                  {
+                    value: "light",
+                    label: (
+                      <span className="flex items-center gap-1.5 text-xs font-semibold">
+                        <Sun size={12} /> Light
+                      </span>
+                    ),
+                  },
+                  {
+                    value: "dark",
+                    label: (
+                      <span className="flex items-center gap-1.5 text-xs font-semibold">
+                        <Moon size={12} /> Dark
+                      </span>
+                    ),
+                  },
+                ]}
+                value={resolvedTheme === "dark" ? "dark" : "light"}
+                onChange={(val) =>
+                  handleThemeSwitch(val as "light" | "dark", drawerThemeRef.current)
+                }
+                equalSlots={true}
+                size="sm"
+                radius={9999}
+                inset={2}
+                stretch={30}
+                squash={2}
+                className="border border-border shadow-2xs"
+              />
+            </div>
           </div>
 
           <nav className="flex flex-col gap-1.5">

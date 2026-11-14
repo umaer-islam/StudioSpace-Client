@@ -52,7 +52,6 @@ export default function RootLayout({
           attribute="class"
           defaultTheme="light"
           enableSystem
-          disableTransitionOnChange
         >
           <SmoothScrollProvider>
             <SiteHeader />
