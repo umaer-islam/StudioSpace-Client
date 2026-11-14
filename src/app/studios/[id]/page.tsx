@@ -433,7 +433,7 @@ function StudioDetailContent({ params }: StudioDetailPageProps) {
       </div>
 
       {/* Floating Bottom Booking Capsule for Mobile & Tablet (< 1024px) */}
-      <div className="lg:hidden fixed bottom-4 inset-x-4 z-40">
+      <div className="lg:hidden fixed bottom-4 inset-x-4 z-50">
         <div className="flex items-center justify-between gap-4 rounded-full border border-border/90 bg-surface/95 px-5 py-3 shadow-2xl backdrop-blur-xl">
           <div>
             <div className="flex items-baseline gap-1">

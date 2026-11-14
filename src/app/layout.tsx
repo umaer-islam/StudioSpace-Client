@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll-provider";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { GradualBlur } from "@/components/react-bits/gradual-blur";
 import { Toaster } from "sonner";
 
 const geistSans = Geist({
@@ -56,6 +57,16 @@ export default function RootLayout({
           <SmoothScrollProvider>
             <SiteHeader />
             <main className="flex-1 pt-24 sm:pt-28">{children}</main>
+            {/* Bottom Progressive Glassmorphic Blur Ramp across the bottom of the viewport */}
+            <GradualBlur
+              target="page"
+              position="bottom"
+              height="10rem"
+              strength={2.5}
+              layers={6}
+              curve="bezier"
+              zIndex={30}
+            />
             <SiteFooter />
             <Toaster
               position="top-right"
