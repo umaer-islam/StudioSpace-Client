@@ -25,7 +25,6 @@ import {
 } from "lucide-react";
 import { Studio, fetchStudioById } from "@/lib/api";
 import { BookingWidget } from "@/components/studios/booking-widget";
-import GradualBlur from "@/components/react-bits/gradual-blur";
 
 interface StudioDetailPageProps {
   params: Promise<{ id: string }>;
@@ -232,18 +231,8 @@ function StudioDetailContent({ params }: StudioDetailPageProps) {
             className="object-cover transition-transform duration-700 hover:scale-105"
           />
 
-          {/* Soft ambient vignette */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
-
-          {/* Gradual Blur Ramp at bottom of photography */}
-          <GradualBlur
-            position="bottom"
-            height="16rem"
-            strength={2.8}
-            layers={6}
-            curve="bezier"
-            zIndex={2}
-          />
+          {/* Soft ambient vignette for badge readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 pointer-events-none" />
 
           {/* Top Floating Badges */}
           <div className="absolute top-4 left-4 flex items-center gap-2">
