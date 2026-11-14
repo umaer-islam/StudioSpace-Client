@@ -30,15 +30,6 @@ export function animateThemeTransition(
     y = rect.top + rect.height / 2;
   }
 
-  // Animate the toggle button with a playful GSAP elastic spring
-  if (originEl) {
-    gsap.fromTo(
-      originEl,
-      { rotate: -30, scale: 0.85 },
-      { rotate: 0, scale: 1, duration: 0.5, ease: "back.out(2.2)" }
-    );
-  }
-
   // Check if browser supports modern View Transitions API
   const doc = document as any;
   if (typeof doc.startViewTransition === "function") {
@@ -48,13 +39,15 @@ export function animateThemeTransition(
     );
 
     try {
+      document.documentElement.classList.add("view-transitioning");
+
       const transition = doc.startViewTransition(() => {
         setTheme(targetTheme);
       });
 
       transition.ready
         ?.then(() => {
-          document.documentElement.animate(
+          const animation = document.documentElement.animate(
             {
               clipPath: [
                 `circle(0px at ${x}px ${y}px)`,
@@ -62,17 +55,28 @@ export function animateThemeTransition(
               ],
             },
             {
-              duration: 520,
-              easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+              duration: 480,
+              easing: "cubic-bezier(0.2, 0, 0, 1)",
               pseudoElement: "::view-transition-new(root)",
             }
           );
+
+          animation.onfinish = () => {
+            document.documentElement.classList.remove("view-transitioning");
+          };
         })
         .catch(() => {
+          document.documentElement.classList.remove("view-transitioning");
           setTheme(targetTheme);
         });
+
+      transition.finished?.finally(() => {
+        document.documentElement.classList.remove("view-transitioning");
+      });
+
       return;
     } catch {
+      document.documentElement.classList.remove("view-transitioning");
       // Fall through to GSAP ripple if startViewTransition throws
     }
   }

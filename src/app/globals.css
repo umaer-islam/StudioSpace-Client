@@ -69,7 +69,14 @@ section,
   transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* Radial circular reveal for View Transitions API */
+/* Disable individual element transitions during active view transitions for buttery 120fps reveal */
+html.view-transitioning *,
+html.view-transitioning *::before,
+html.view-transitioning *::after {
+  transition: none !important;
+}
+
+/* Radial circular reveal for View Transitions API - new theme always expands smoothly on top */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
@@ -82,14 +89,6 @@ section,
 
 ::view-transition-new(root) {
   z-index: 999999;
-}
-
-.dark::view-transition-old(root) {
-  z-index: 999999;
-}
-
-.dark::view-transition-new(root) {
-  z-index: 1;
 }
 
 button,
