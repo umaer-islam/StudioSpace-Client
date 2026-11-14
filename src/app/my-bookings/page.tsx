@@ -21,6 +21,7 @@ import {
   cancelBooking,
 } from "@/lib/api";
 import { useSession } from "@/lib/auth-client";
+import AnimatedContent from "@/components/react-bits/animated-content";
 
 export default function MyBookingsPage() {
   const router = useRouter();
@@ -140,21 +141,23 @@ export default function MyBookingsPage() {
 
   return (
     <div className="container-main py-10 lg:py-14">
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">My Bookings</h1>
-          <p className="mt-1 text-sm text-muted">
-            Track and manage your upcoming and past studio reservations.
-          </p>
-        </div>
+      <AnimatedContent distance={30} duration={0.65} trigger="mount">
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">My Bookings</h1>
+            <p className="mt-1 text-sm text-muted">
+              Track and manage your upcoming and past studio reservations.
+            </p>
+          </div>
 
-        <Link
-          href="/studios"
-          className="inline-flex items-center gap-1.5 rounded-full bg-neutral-900 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:bg-black hover:shadow-md hover:scale-[1.02] active:scale-[0.98] dark:bg-white dark:text-neutral-900 self-start"
-        >
-          Explore Studios <ArrowRight size={14} />
-        </Link>
-      </div>
+          <Link
+            href="/studios"
+            className="inline-flex items-center gap-1.5 rounded-full bg-neutral-900 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:bg-black hover:shadow-md hover:scale-[1.02] active:scale-[0.98] dark:bg-white dark:text-neutral-900 self-start"
+          >
+            Explore Studios <ArrowRight size={14} />
+          </Link>
+        </div>
+      </AnimatedContent>
 
       {actionError && (
         <div className="mb-6 flex items-start gap-2.5 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-xs font-medium text-red-600 dark:text-red-400">
@@ -186,7 +189,13 @@ export default function MyBookingsPage() {
           </div>
         </div>
       ) : (
-        <div className="space-y-4">
+        <AnimatedContent
+          distance={35}
+          duration={0.6}
+          stagger={0.07}
+          trigger="mount"
+          className="space-y-4"
+        >
           {bookings.map((booking) => {
             const start = new Date(booking.startTime);
             const end = new Date(booking.endTime);
@@ -273,7 +282,7 @@ export default function MyBookingsPage() {
               </div>
             );
           })}
-        </div>
+        </AnimatedContent>
       )}
 
       {/* Cancellation Modal */}

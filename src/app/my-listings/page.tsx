@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useSession } from "@/lib/auth-client";
 import { fetchHostListings, deleteStudio, Studio } from "@/lib/api";
+import AnimatedContent from "@/components/react-bits/animated-content";
 import {
   Building2,
   PlusCircle,
@@ -112,34 +113,36 @@ export default function MyListingsPage() {
 
   return (
     <div className="container-main py-10 lg:py-14">
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">My Studio Listings</h1>
-            <span className="rounded-full bg-accent/10 px-2.5 py-0.5 text-xs font-bold text-accent">
-              {listings.length}
-            </span>
+      <AnimatedContent distance={30} duration={0.65} trigger="mount">
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">My Studio Listings</h1>
+              <span className="rounded-full bg-accent/10 px-2.5 py-0.5 text-xs font-bold text-accent">
+                {listings.length}
+              </span>
+            </div>
+            <p className="mt-1 text-sm text-muted">
+              Manage your spaces, update hourly rates, or list new creative studios.
+            </p>
           </div>
-          <p className="mt-1 text-sm text-muted">
-            Manage your spaces, update hourly rates, or list new creative studios.
-          </p>
-        </div>
 
-        <div className="flex items-center gap-3">
-          <Link
-            href="/host-reservations"
-            className="rounded-full border border-border px-4 py-2 text-xs font-semibold hover:bg-surface-secondary"
-          >
-            View Reservations
-          </Link>
-          <Link
-            href="/add-studio"
-            className="inline-flex items-center gap-1.5 rounded-full bg-neutral-900 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:bg-black hover:shadow-md hover:scale-[1.02] active:scale-[0.98] dark:bg-white dark:text-neutral-900"
-          >
-            <PlusCircle size={15} /> Add Studio
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/host-reservations"
+              className="rounded-full border border-border px-4 py-2 text-xs font-semibold hover:bg-surface-secondary"
+            >
+              View Reservations
+            </Link>
+            <Link
+              href="/add-studio"
+              className="inline-flex items-center gap-1.5 rounded-full bg-neutral-900 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:bg-black hover:shadow-md hover:scale-[1.02] active:scale-[0.98] dark:bg-white dark:text-neutral-900"
+            >
+              <PlusCircle size={15} /> Add Studio
+            </Link>
+          </div>
         </div>
-      </div>
+      </AnimatedContent>
 
       {actionError && (
         <div className="mb-6 flex items-start gap-2.5 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-xs font-medium text-red-600 dark:text-red-400">
@@ -171,7 +174,13 @@ export default function MyListingsPage() {
           </div>
         </div>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <AnimatedContent
+          distance={35}
+          duration={0.65}
+          stagger={0.07}
+          trigger="mount"
+          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+        >
           {listings.map((studio) => (
             <div
               key={studio._id}
@@ -287,7 +296,7 @@ export default function MyListingsPage() {
               )}
             </div>
           ))}
-        </div>
+        </AnimatedContent>
       )}
     </div>
   );

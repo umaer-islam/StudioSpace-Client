@@ -7,6 +7,7 @@ import { useSession } from "@/lib/auth-client";
 import { createStudio, CreateStudioPayload } from "@/lib/api";
 import { CustomSelect } from "@/components/ui/custom-select";
 import { CustomButton } from "@/components/ui/custom-button";
+import AnimatedContent from "@/components/react-bits/animated-content";
 import {
   DollarSign,
   Users,
@@ -181,19 +182,20 @@ export default function AddStudioPage() {
   return (
     <div className="container-main py-10 lg:py-14">
       <div className="mx-auto max-w-3xl">
-        <div className="mb-6 flex items-center justify-between">
-          <Link
-            href="/my-listings"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted hover:text-foreground"
-          >
-            <ArrowLeft size={14} /> Back to My Listings
-          </Link>
-          <span className="inline-flex items-center gap-1 rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">
-            <Sparkles size={13} /> Host Dashboard
-          </span>
-        </div>
+        <AnimatedContent distance={30} duration={0.65} trigger="mount">
+          <div className="mb-6 flex items-center justify-between">
+            <Link
+              href="/my-listings"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted hover:text-foreground"
+            >
+              <ArrowLeft size={14} /> Back to My Listings
+            </Link>
+            <span className="inline-flex items-center gap-1 rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">
+              <Sparkles size={13} /> Host Dashboard
+            </span>
+          </div>
 
-        <div className="rounded-3xl border border-border bg-surface p-6 sm:p-10 shadow-sm">
+          <div className="rounded-3xl border border-border bg-surface p-6 sm:p-10 shadow-sm">
           <div className="border-b border-border pb-6">
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Add a New Studio</h1>
             <p className="mt-1.5 text-sm text-muted">
@@ -432,7 +434,8 @@ export default function AddStudioPage() {
             </div>
           </form>
         </div>
-      </div>
+      </AnimatedContent>
     </div>
-  );
+  </div>
+);
 }
