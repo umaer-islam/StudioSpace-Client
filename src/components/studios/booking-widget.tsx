@@ -11,11 +11,13 @@ import {
   Loader2,
   Sparkles,
 } from "lucide-react";
+import { toast } from "sonner";
 import { Studio, createBooking, fetchStudioAvailability, OccupiedSlot } from "@/lib/api";
 import { useSession } from "@/lib/auth-client";
 import { CustomCalendar } from "@/components/ui/custom-calendar";
 import { CustomTimePicker } from "@/components/ui/custom-time-picker";
 import { CustomButton } from "@/components/ui/custom-button";
+import HoldButton from "@/components/react-bits/hold-button";
 
 interface BookingWidgetProps {
   studio: Studio;
@@ -100,8 +102,8 @@ export function BookingWidget({ studio }: BookingWidgetProps) {
     });
   }
 
-  const handleBookingSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleBookingSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     setError(null);
     setSuccess(null);
 
@@ -275,22 +277,53 @@ export function BookingWidget({ studio }: BookingWidgetProps) {
             </div>
           )}
 
-          {/* Action Button */}
+          {/* Action Button: Liquid Fill HoldButton from React Bits */}
           {user ? (
-            <CustomButton
-              type="submit"
-              variant="primary"
-              size="lg"
-              loading={isPending}
-              disabled={!isValidDuration || isOverlapping || Boolean(isHostOfStudio)}
-              className="w-full"
-            >
-              {isHostOfStudio
-                ? "You own this studio"
-                : isOverlapping
-                ? "Time Slot Unavailable"
-                : "Request Reservation"}
-            </CustomButton>
+            isPending ? (
+              <div className="flex h-[52px] w-full items-center justify-center gap-2 rounded-full bg-neutral-900 text-white font-semibold text-sm shadow-md dark:bg-white dark:text-neutral-900">
+                <Loader2 className="animate-spin text-accent" size={18} />
+                <span>Submitting Reservation...</span>
+              </div>
+            ) : (
+              <HoldButton
+                type="button"
+                size="lg"
+                radius={9999}
+                holdTime={1400}
+                releaseTime={220}
+                pressScale={0.97}
+                wave={true}
+                waveAmplitude={6}
+                glow={true}
+                backgroundColor="#18181b"
+                fillColor="#d97745"
+                textColor="#ffffff"
+                fillTextColor="#ffffff"
+                disabled={!isValidDuration || isOverlapping || Boolean(isHostOfStudio)}
+                onHold={() => handleBookingSubmit()}
+                onTap={() => {
+                  if (isHostOfStudio) {
+                    toast.error("Hosts cannot book their own studio listings.");
+                  } else if (!isValidDuration) {
+                    toast.error("Please select a minimum duration of 1 hour.");
+                  } else if (isOverlapping) {
+                    toast.error("Selected time slot is unavailable. Choose another time.");
+                  } else {
+                    toast.info("Press & hold for 1.4s to confirm your reservation.");
+                  }
+                }}
+                icon={<Sparkles size={16} className="text-accent shrink-0" />}
+                doneIcon={<CheckCircle2 size={16} className="text-white shrink-0" />}
+                doneLabel="Reservation Confirmed!"
+                className="w-full shadow-md"
+              >
+                {isHostOfStudio
+                  ? "You own this studio"
+                  : isOverlapping
+                  ? "Time Slot Unavailable"
+                  : "Hold to Request Reservation"}
+              </HoldButton>
+            )
           ) : (
             <Link
               href="/login"
