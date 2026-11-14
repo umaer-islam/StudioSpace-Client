@@ -64,3 +64,4 @@ export function SplitText({
     </span>
   );
 }
+

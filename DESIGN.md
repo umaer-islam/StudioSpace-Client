@@ -28,3 +28,4 @@ StudioSpace is an architectural, editorial marketplace connecting creative profe
 - Direct, honest, production-grounded copy.
 - No buzzwords ("supercharge your workflow", "AI-powered synergy", "next-gen").
 - Real studio metrics: hourly rate, ceiling height, daylight orientation, soundproof rating, and confirmed reservation slots.
+
