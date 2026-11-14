@@ -154,28 +154,44 @@ export default function Home() {
       </section>
 
       {/* AMBIENT RUNNING TEXT LOOP MARQUEE RIBBON */}
-      <section
-        className="relative w-full overflow-hidden py-4 sm:py-6 pointer-events-auto"
-        aria-label="Studio categories marquee"
-      >
-        <div className="w-full h-14 sm:h-16 md:h-20">
+      <section className="relative w-full overflow-hidden py-4 sm:py-6 pointer-events-auto" aria-label="Studio categories marquee">
+        {/* Mobile View: High-impact bold ribbon with generous letter spacing & readable proportions */}
+        <div className="block sm:hidden filter drop-shadow-sm">
           <TextLoop
             text="DAYLIGHT LOFTS ✦ SOUNDSTAGES ✦ PODCAST LOUNGES ✦ MUSIC SUITES ✦ CERAMIC WORKSHOPS ✦ ATOMIC SCHEDULING ✦ VERIFIED ACOUSTICS"
             shape="wave"
-            speed={48}
-            curviness={10}
-            fontSize={22}
+            speed={38}
+            curviness={16}
+            fontSize={24}
             fontWeight={800}
-            letterSpacing={3}
+            letterSpacing={6}
             ribbon={true}
             ribbonColor="#d97745"
             color="#ffffff"
-            ribbonWidth={52}
-            edgeFade={0.18}
+            ribbonWidth={70}
+            edgeFade={0.1}
             pauseOnHover={true}
-            viewBox="0 205 1200 110"
-            preserveAspectRatio="xMidYMid slice"
-            className="w-full h-full"
+            viewBox="0 170 1200 180"
+          />
+        </div>
+
+        {/* Tablet & Desktop View: Sleek architectural marquee wave with generous letter spacing */}
+        <div className="hidden sm:block">
+          <TextLoop
+            text="DAYLIGHT LOFTS ✦ SOUNDSTAGES ✦ PODCAST LOUNGES ✦ MUSIC SUITES ✦ CERAMIC WORKSHOPS ✦ ATOMIC SCHEDULING ✦ VERIFIED ACOUSTICS"
+            shape="wave"
+            speed={50}
+            curviness={20}
+            fontSize={22}
+            fontWeight={800}
+            letterSpacing={5}
+            ribbon={true}
+            ribbonColor="#d97745"
+            color="#ffffff"
+            ribbonWidth={58}
+            edgeFade={0.2}
+            pauseOnHover={true}
+            viewBox="0 180 1200 160"
           />
         </div>
       </section>

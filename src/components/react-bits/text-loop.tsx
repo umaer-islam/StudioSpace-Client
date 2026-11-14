@@ -139,7 +139,6 @@ export interface TextLoopProps {
   outline?: boolean;
   outlineWidth?: number;
   viewBox?: string;
-  preserveAspectRatio?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -171,7 +170,6 @@ export function TextLoop({
   outline = false,
   outlineWidth = 1.5,
   viewBox,
-  preserveAspectRatio,
   className = "",
   style = {},
 }: TextLoopProps) {
@@ -186,7 +184,13 @@ export function TextLoop({
   const crossTailRef = useRef<SVGTextPathElement | null>(null);
   const progressRef = useRef(0);
 
-  const [metrics, setMetrics] = useState({ length: 0, reps: 1, crossLength: 0, crossReps: 1 });
+  const [metrics, setMetrics] = useState({
+    length: 0,
+    reps: 2,
+    crossLength: 0,
+    crossReps: 2,
+    unitWidth: 0,
+  });
 
   const rawId = useId();
   const pathId = `text-loop-${rawId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
@@ -222,7 +226,12 @@ export function TextLoop({
   }, [text, separator, uppercase]);
 
   const textStyle = useMemo(
-    () => ({ fontSize: `${fontSize}px`, fontWeight, letterSpacing: `${letterSpacing}px` }),
+    () => ({
+      fontSize: `${fontSize}px`,
+      fontWeight,
+      letterSpacing: `${letterSpacing}px`,
+      fontFamily: "var(--font-geist-sans), -apple-system, BlinkMacSystemFont, sans-serif",
+    }),
     [fontSize, fontWeight, letterSpacing]
   );
 
@@ -245,19 +254,20 @@ export function TextLoop({
       } catch {
         return;
       }
-      if (!length) return;
+      if (!length || !unitWidth) return;
 
-      const repsFor = (total: number) => {
-        if (unitWidth <= 0) return 1;
-        if (shape === "circle" || shape === "infinity") {
-          return Math.max(1, Math.round(total / unitWidth));
-        }
-        // For open wave and line shapes, generate ample repetitions so characters are never squashed
-        return Math.max(2, Math.ceil((total * 1.6) / unitWidth) + 1);
+      const repsFor = (total: number) =>
+        unitWidth > 0 ? Math.max(3, Math.ceil(total / unitWidth) + 2) : 2;
+      const next = {
+        length,
+        unitWidth,
+        reps: repsFor(length),
+        crossLength,
+        crossReps: repsFor(crossLength || length),
       };
-      const next = { length, reps: repsFor(length), crossLength, crossReps: repsFor(crossLength) };
       setMetrics((prev) =>
         prev.length === next.length &&
+        prev.unitWidth === next.unitWidth &&
         prev.reps === next.reps &&
         prev.crossLength === next.crossLength &&
         prev.crossReps === next.crossReps
@@ -277,7 +287,8 @@ export function TextLoop({
   }, [d, crossD, unit, fontSize, fontWeight, letterSpacing]);
 
   useIsomorphicLayoutEffect(() => {
-    const { length, crossLength } = metrics;
+    const { length, crossLength, unitWidth } = metrics;
+    const period = unitWidth > 0 ? unitWidth : length;
     const head = headRef.current;
     const tail = tailRef.current;
     const root = rootRef.current;
@@ -288,16 +299,16 @@ export function TextLoop({
     const crossTail = crossTailRef.current;
     const crossPaths = cross && crossHead && crossTail && crossLength > 0 ? [crossHead, crossTail] : null;
 
-    let travel = progressRef.current * length;
+    let travel = progressRef.current * period;
     const apply = () => {
-      const offset = wrap(travel, length);
-      progressRef.current = offset / length;
+      const offset = wrap(travel, period);
+      progressRef.current = offset / period;
       head.setAttribute("startOffset", String(offset));
-      tail.setAttribute("startOffset", String(offset - length));
+      tail.setAttribute("startOffset", String(offset - period));
       if (crossPaths) {
-        const crossOffset = wrap(-travel, crossLength);
+        const crossOffset = wrap(-travel, period);
         crossPaths[0].setAttribute("startOffset", String(crossOffset));
-        crossPaths[1].setAttribute("startOffset", String(crossOffset - crossLength));
+        crossPaths[1].setAttribute("startOffset", String(crossOffset - period));
       }
     };
     apply();
@@ -480,10 +491,9 @@ export function TextLoop({
 
   const loopText = unit.repeat(metrics.reps);
   const crossText = unit.repeat(metrics.crossReps);
-  // Never force textLength on wave or line paths because SVG will crush and collapse letters together
-  const isClosedLoop = shape === "circle" || shape === "infinity";
-  const fitLength = isClosedLoop ? metrics.length || undefined : undefined;
-  const crossFit = isClosedLoop ? metrics.crossLength || undefined : undefined;
+  // Do NOT force textLength so letter spacing is never compressed or collapsed
+  const fitLength = undefined;
+  const crossFit = undefined;
   const paint = (ink: string, opacity: number) =>
     outline
       ? {
@@ -507,7 +517,7 @@ export function TextLoop({
         ref={svgRef}
         className="text-loop-svg"
         viewBox={viewBox || `0 0 ${VIEW_W} ${VIEW_H}`}
-        preserveAspectRatio={preserveAspectRatio || "xMidYMid meet"}
+        preserveAspectRatio="xMidYMid meet"
         role="img"
         aria-label={text}
       >
@@ -583,8 +593,6 @@ export function TextLoop({
                 {...crossPaint}
                 dominantBaseline="central"
                 aria-hidden="true"
-                textLength={crossFit}
-                lengthAdjust="spacing"
               >
                 <textPath ref={crossHeadRef} href={`#${crossId}`} startOffset={0}>
                   {crossText}
@@ -597,8 +605,6 @@ export function TextLoop({
                 {...crossPaint}
                 dominantBaseline="central"
                 aria-hidden="true"
-                textLength={crossFit}
-                lengthAdjust="spacing"
               >
                 <textPath ref={crossTailRef} href={`#${crossId}`} startOffset={0}>
                   {crossText}
@@ -643,8 +649,6 @@ export function TextLoop({
               {...mainPaint}
               dominantBaseline="central"
               aria-hidden="true"
-              textLength={fitLength}
-              lengthAdjust="spacing"
             >
               <textPath ref={headRef} href={`#${pathId}`} startOffset={0}>
                 {loopText}
@@ -657,8 +661,6 @@ export function TextLoop({
               {...mainPaint}
               dominantBaseline="central"
               aria-hidden="true"
-              textLength={fitLength}
-              lengthAdjust="spacing"
             >
               <textPath ref={tailRef} href={`#${pathId}`} startOffset={0}>
                 {loopText}
