@@ -154,44 +154,28 @@ export default function Home() {
       </section>
 
       {/* AMBIENT RUNNING TEXT LOOP MARQUEE RIBBON */}
-      <section className="relative w-full overflow-hidden py-4 sm:py-6 pointer-events-auto" aria-label="Studio categories marquee">
-        {/* Mobile View: High-impact bold ribbon with readable typography & full-bleed proportion */}
-        <div className="block sm:hidden">
+      <section
+        className="relative w-full overflow-hidden py-4 sm:py-6 pointer-events-auto"
+        aria-label="Studio categories marquee"
+      >
+        <div className="w-full h-14 sm:h-16 md:h-20">
           <TextLoop
             text="DAYLIGHT LOFTS ✦ SOUNDSTAGES ✦ PODCAST LOUNGES ✦ MUSIC SUITES ✦ CERAMIC WORKSHOPS ✦ ATOMIC SCHEDULING ✦ VERIFIED ACOUSTICS"
             shape="wave"
-            speed={40}
-            curviness={16}
-            fontSize={36}
+            speed={48}
+            curviness={10}
+            fontSize={22}
             fontWeight={800}
             letterSpacing={3}
             ribbon={true}
             ribbonColor="#d97745"
             color="#ffffff"
-            ribbonWidth={90}
-            edgeFade={0.12}
+            ribbonWidth={52}
+            edgeFade={0.18}
             pauseOnHover={true}
-            viewBox="0 170 1200 180"
-          />
-        </div>
-
-        {/* Tablet & Desktop View: Sleek architectural marquee wave */}
-        <div className="hidden sm:block">
-          <TextLoop
-            text="DAYLIGHT LOFTS ✦ SOUNDSTAGES ✦ PODCAST LOUNGES ✦ MUSIC SUITES ✦ CERAMIC WORKSHOPS ✦ ATOMIC SCHEDULING ✦ VERIFIED ACOUSTICS"
-            shape="wave"
-            speed={55}
-            curviness={20}
-            fontSize={24}
-            fontWeight={800}
-            letterSpacing={2}
-            ribbon={true}
-            ribbonColor="#d97745"
-            color="#ffffff"
-            ribbonWidth={64}
-            edgeFade={0.25}
-            pauseOnHover={true}
-            viewBox="0 180 1200 160"
+            viewBox="0 205 1200 110"
+            preserveAspectRatio="xMidYMid slice"
+            className="w-full h-full"
           />
         </div>
       </section>

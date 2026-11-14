@@ -139,6 +139,7 @@ export interface TextLoopProps {
   outline?: boolean;
   outlineWidth?: number;
   viewBox?: string;
+  preserveAspectRatio?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -170,6 +171,7 @@ export function TextLoop({
   outline = false,
   outlineWidth = 1.5,
   viewBox,
+  preserveAspectRatio,
   className = "",
   style = {},
 }: TextLoopProps) {
@@ -505,7 +507,7 @@ export function TextLoop({
         ref={svgRef}
         className="text-loop-svg"
         viewBox={viewBox || `0 0 ${VIEW_W} ${VIEW_H}`}
-        preserveAspectRatio="xMidYMid meet"
+        preserveAspectRatio={preserveAspectRatio || "xMidYMid meet"}
         role="img"
         aria-label={text}
       >
