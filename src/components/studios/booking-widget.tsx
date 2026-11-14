@@ -153,7 +153,10 @@ export function BookingWidget({ studio }: BookingWidgetProps) {
   };
 
   return (
-    <div className="sticky top-24 rounded-3xl border border-border bg-surface p-6 sm:p-8 shadow-lg space-y-6">
+    <div
+      id="booking-card"
+      className="sticky top-28 rounded-3xl border border-border bg-surface p-6 sm:p-8 shadow-xl space-y-6"
+    >
       <div className="flex items-baseline justify-between border-b border-border pb-6">
         <div>
           <span className="text-3xl font-bold text-foreground">
