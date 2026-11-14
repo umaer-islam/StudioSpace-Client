@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { useSession, signOut } from "@/lib/auth-client";
 import RubberSegment from "@/components/react-bits/rubber-segment";
+import GooeyNav from "@/components/react-bits/gooey-nav";
 
 const navigation = [
   { label: "Home", href: "/" },
@@ -192,6 +193,27 @@ function SiteHeaderContent() {
     return pathname.startsWith(href);
   };
 
+  const getActiveNavIndex = () => {
+    if (pathname === "/") return 0;
+    if (pathname.startsWith("/studios")) return 1;
+    return 0;
+  };
+
+  const handleNavChange = (index: number, item: { href?: string }) => {
+    if (!item.href) return;
+    if (item.href.startsWith("/#")) {
+      const hash = item.href.slice(2);
+      if (pathname === "/") {
+        const el = document.getElementById(hash);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      } else {
+        router.push(item.href);
+      }
+    } else {
+      router.push(item.href);
+    }
+  };
+
   return (
     <header
       className={`fixed top-4 inset-x-0 z-50 mx-auto w-[min(100%-28px,1240px)] transition-all duration-300 ${
@@ -213,28 +235,27 @@ function SiteHeaderContent() {
           </span>
         </Link>
 
-        {/* Center Desktop Navigation with Active Route Indicators */}
-        <nav className="hidden items-center gap-1.5 md:flex">
-          {navigation.map((item) => {
-            const active = isActiveRoute(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`relative px-4 py-2 text-xs font-semibold rounded-full transition-all duration-200 ${
-                  active
-                    ? "bg-surface-secondary text-foreground shadow-2xs font-bold"
-                    : "text-muted hover:text-foreground hover:bg-surface-secondary/60"
-                }`}
-              >
-                {item.label}
-                {active && (
-                  <span className="absolute bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-accent" />
-                )}
-              </Link>
-            );
-          })}
-        </nav>
+        {/* Center Desktop Navigation with React Bits WebGL Gooey Fluid Animation */}
+        <div className="hidden items-center md:flex">
+          <GooeyNav
+            items={navigation}
+            activeIndex={getActiveNavIndex()}
+            onChange={handleNavChange}
+            theme={resolvedTheme === "dark" ? "dark" : "light"}
+            color={resolvedTheme === "dark" ? "#ffffff" : "#171717"}
+            activeTextColor={resolvedTheme === "dark" ? "#171717" : "#ffffff"}
+            colors={["#d97745", "#e58b5b", "#bd6032"]}
+            size="sm"
+            frame={false}
+            animationTime={500}
+            particleCount={14}
+            spread={32}
+            timeVariance={220}
+            gooeyness={0.65}
+            wobble={0.4}
+            hoverEffect={true}
+          />
+        </div>
 
         {/* Right Section: Theme Toggle + Auth Controls */}
         <div className="flex items-center gap-2.5 sm:gap-3">
