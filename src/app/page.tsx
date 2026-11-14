@@ -14,6 +14,7 @@ import {
 import { FeaturedStudios } from "@/components/home/featured-studios";
 import { HeroShowcase } from "@/components/home/hero-showcase";
 import { AnimatedContent } from "@/components/react-bits/animated-content";
+import { TextLoop } from "@/components/react-bits/text-loop";
 
 const categories = [
   {
@@ -146,6 +147,26 @@ export default function Home() {
             })}
           </AnimatedContent>
         </div>
+      </section>
+
+      {/* AMBIENT RUNNING TEXT LOOP MARQUEE RIBBON */}
+      <section className="relative w-full overflow-hidden py-4 -my-4 sm:py-6 sm:-my-6 pointer-events-auto" aria-label="Studio categories marquee">
+        <TextLoop
+          text="DAYLIGHT LOFTS ✦ SOUNDSTAGES ✦ PODCAST LOUNGES ✦ MUSIC SUITES ✦ CERAMIC WORKSHOPS ✦ ATOMIC SCHEDULING ✦ VERIFIED ACOUSTICS"
+          shape="wave"
+          speed={60}
+          curviness={22}
+          fontSize={22}
+          fontWeight={800}
+          letterSpacing={2}
+          ribbon={true}
+          ribbonColor="#d97745"
+          color="#ffffff"
+          ribbonWidth={56}
+          edgeFade={0.3}
+          pauseOnHover={true}
+          viewBox="0 180 1200 160"
+        />
       </section>
 
       {/* FEATURED STUDIOS (API INTEGRATED) */}
