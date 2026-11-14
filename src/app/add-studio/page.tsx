@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSession } from "@/lib/auth-client";
 import { createStudio, CreateStudioPayload } from "@/lib/api";
+import { CustomSelect } from "@/components/ui/custom-select";
+import { CustomButton } from "@/components/ui/custom-button";
 import {
   DollarSign,
   Users,
@@ -226,21 +228,12 @@ export default function AddStudioPage() {
             {/* Category & Capacity */}
             <div className="grid gap-6 sm:grid-cols-2">
               <div>
-                <label htmlFor="category" className="block text-xs font-bold uppercase tracking-wider text-muted">
-                  Category *
-                </label>
-                <select
-                  id="category"
+                <CustomSelect
+                  label="Category *"
                   value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="mt-2 w-full rounded-2xl border border-border bg-surface-secondary px-4 py-3 text-sm focus:border-accent focus:outline-none"
-                >
-                  {CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
-                </select>
+                  options={CATEGORIES.map((c) => ({ label: c, value: c }))}
+                  onChange={(val) => setFormData({ ...formData, category: val })}
+                />
               </div>
 
               <div>
@@ -427,19 +420,15 @@ export default function AddStudioPage() {
 
             {/* Submit Action */}
             <div className="pt-4">
-              <button
+              <CustomButton
                 type="submit"
-                disabled={isPending}
-                className="w-full rounded-2xl bg-foreground py-3.5 text-sm font-bold text-background transition-opacity hover:opacity-90 disabled:opacity-50"
+                variant="primary"
+                size="lg"
+                loading={isPending}
+                className="w-full"
               >
-                {isPending ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <Loader2 size={16} className="animate-spin" /> Publishing Studio...
-                  </span>
-                ) : (
-                  "Publish Studio Listing"
-                )}
-              </button>
+                Publish Studio Listing
+              </CustomButton>
             </div>
           </form>
         </div>

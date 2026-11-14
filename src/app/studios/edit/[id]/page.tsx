@@ -9,6 +9,8 @@ import {
   updateStudio,
   CreateStudioPayload,
 } from "@/lib/api";
+import { CustomSelect } from "@/components/ui/custom-select";
+import { CustomButton } from "@/components/ui/custom-button";
 import {
   DollarSign,
   Users,
@@ -255,39 +257,27 @@ function EditStudioContent({
             {/* Category & Status */}
             <div className="grid gap-6 sm:grid-cols-2">
               <div>
-                <label htmlFor="category" className="block text-xs font-bold uppercase tracking-wider text-muted">
-                  Category *
-                </label>
-                <select
-                  id="category"
+                <CustomSelect
+                  label="Category *"
                   value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="mt-2 w-full rounded-2xl border border-border bg-surface-secondary px-4 py-3 text-sm focus:border-accent focus:outline-none"
-                >
-                  {CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
-                </select>
+                  options={CATEGORIES.map((c) => ({ label: c, value: c }))}
+                  onChange={(val) => setFormData({ ...formData, category: val })}
+                />
               </div>
 
               <div>
-                <label htmlFor="status" className="block text-xs font-bold uppercase tracking-wider text-muted">
-                  Listing Status *
-                </label>
-                <select
-                  id="status"
+                <CustomSelect
+                  label="Listing Status *"
                   value={status}
-                  onChange={(e) =>
-                    setStatus(e.target.value as "active" | "inactive" | "maintenance")
+                  options={[
+                    { label: "Active (Available for booking)", value: "active" },
+                    { label: "Inactive (Hidden from search)", value: "inactive" },
+                    { label: "Maintenance", value: "maintenance" },
+                  ]}
+                  onChange={(val) =>
+                    setStatus(val as "active" | "inactive" | "maintenance")
                   }
-                  className="mt-2 w-full rounded-2xl border border-border bg-surface-secondary px-4 py-3 text-sm focus:border-accent focus:outline-none"
-                >
-                  <option value="active">Active (Available for booking)</option>
-                  <option value="inactive">Inactive (Hidden from search)</option>
-                  <option value="maintenance">Maintenance</option>
-                </select>
+                />
               </div>
             </div>
 
@@ -471,19 +461,15 @@ function EditStudioContent({
               >
                 Cancel
               </Link>
-              <button
+              <CustomButton
                 type="submit"
-                disabled={isPending}
-                className="flex-1 rounded-2xl bg-foreground py-3 text-sm font-bold text-background transition-opacity hover:opacity-90 disabled:opacity-50"
+                variant="primary"
+                size="md"
+                loading={isPending}
+                className="flex-1"
               >
-                {isPending ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <Loader2 size={16} className="animate-spin" /> Saving Changes...
-                  </span>
-                ) : (
-                  "Save Changes"
-                )}
-              </button>
+                Save Changes
+              </CustomButton>
             </div>
           </form>
         </div>

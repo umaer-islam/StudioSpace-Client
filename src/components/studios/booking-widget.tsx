@@ -13,6 +13,9 @@ import {
 } from "lucide-react";
 import { Studio, createBooking, fetchStudioAvailability, OccupiedSlot } from "@/lib/api";
 import { useSession } from "@/lib/auth-client";
+import { CustomCalendar } from "@/components/ui/custom-calendar";
+import { CustomTimePicker } from "@/components/ui/custom-time-picker";
+import { CustomButton } from "@/components/ui/custom-button";
 
 interface BookingWidgetProps {
   studio: Studio;
@@ -206,87 +209,27 @@ export function BookingWidget({ studio }: BookingWidgetProps) {
             </div>
           )}
 
-          {/* Date Picker */}
-          <div>
-            <label
-              htmlFor="booking-date"
-              className="block text-xs font-semibold uppercase tracking-wider text-muted mb-1.5"
-            >
-              Production Date
+          {/* Custom Date Picker */}
+          <div className="space-y-1.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-muted">
+              Production Date: <span className="text-foreground font-semibold">{date}</span>
             </label>
-            <div className="relative">
-              <Calendar
-                size={16}
-                className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"
-              />
-              <input
-                id="booking-date"
-                type="date"
-                required
-                min={new Date().toISOString().split("T")[0]}
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="w-full rounded-xl border border-border bg-background py-2.5 pl-10 pr-4 text-xs font-medium focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
-              />
-            </div>
+            <CustomCalendar
+              selectedDate={date}
+              onSelectDate={setDate}
+              minDate={new Date().toISOString().split("T")[0]}
+            />
           </div>
 
-          {/* Time Selection */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label
-                htmlFor="start-time"
-                className="block text-xs font-semibold uppercase tracking-wider text-muted mb-1.5"
-              >
-                Start Time
-              </label>
-              <div className="relative">
-                <Clock
-                  size={16}
-                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
-                />
-                <select
-                  id="start-time"
-                  value={startTime}
-                  onChange={(e) => setStartTime(e.target.value)}
-                  className="w-full rounded-xl border border-border bg-background py-2.5 pl-9 pr-3 text-xs font-medium focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent appearance-none cursor-pointer"
-                >
-                  {TIME_SLOTS.map((t) => (
-                    <option key={t} value={t}>
-                      {t} UTC
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor="end-time"
-                className="block text-xs font-semibold uppercase tracking-wider text-muted mb-1.5"
-              >
-                End Time
-              </label>
-              <div className="relative">
-                <Clock
-                  size={16}
-                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
-                />
-                <select
-                  id="end-time"
-                  value={endTime}
-                  onChange={(e) => setEndTime(e.target.value)}
-                  className="w-full rounded-xl border border-border bg-background py-2.5 pl-9 pr-3 text-xs font-medium focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent appearance-none cursor-pointer"
-                >
-                  {TIME_SLOTS.map((t) => (
-                    <option key={t} value={t}>
-                      {t} UTC
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
+          {/* Custom Visual Time & Hours Picker */}
+          <CustomTimePicker
+            startTime={startTime}
+            endTime={endTime}
+            onSelectRange={(start, end) => {
+              setStartTime(start);
+              setEndTime(end);
+            }}
+          />
 
           {/* Optional Notes */}
           <div>
@@ -324,30 +267,27 @@ export function BookingWidget({ studio }: BookingWidgetProps) {
               )}
               <div className="border-t border-border pt-2 flex justify-between font-bold text-foreground text-sm">
                 <span>Total Estimated</span>
-                <span className="text-accent">${totalPrice} BDT</span>
+                <span className="text-accent">${totalPrice}</span>
               </div>
             </div>
           )}
 
           {/* Action Button */}
           {user ? (
-            <button
+            <CustomButton
               type="submit"
-              disabled={isPending || !isValidDuration || isOverlapping || Boolean(isHostOfStudio)}
-              className="w-full rounded-full bg-foreground py-3.5 text-center text-sm font-semibold text-background hover:opacity-85 transition-opacity shadow-md disabled:cursor-not-allowed disabled:opacity-50 flex items-center justify-center gap-2"
+              variant="primary"
+              size="lg"
+              loading={isPending}
+              disabled={!isValidDuration || isOverlapping || Boolean(isHostOfStudio)}
+              className="w-full"
             >
-              {isPending ? (
-                <>
-                  <Loader2 size={16} className="animate-spin" /> Reserving...
-                </>
-              ) : isHostOfStudio ? (
-                "You own this studio"
-              ) : isOverlapping ? (
-                "Time Slot Unavailable"
-              ) : (
-                "Request Reservation"
-              )}
-            </button>
+              {isHostOfStudio
+                ? "You own this studio"
+                : isOverlapping
+                ? "Time Slot Unavailable"
+                : "Request Reservation"}
+            </CustomButton>
           ) : (
             <Link
               href="/login"

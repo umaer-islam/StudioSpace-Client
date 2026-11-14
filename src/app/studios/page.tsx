@@ -14,6 +14,9 @@ import {
 import { Studio, fetchStudios } from "@/lib/api";
 import { StudioCard } from "@/components/studios/studio-card";
 import { StudioSkeleton } from "@/components/studios/studio-skeleton";
+import { CustomSelect } from "@/components/ui/custom-select";
+import { CustomInput } from "@/components/ui/custom-input";
+import { CustomButton } from "@/components/ui/custom-button";
 
 const CATEGORIES = [
   "All",
@@ -144,37 +147,24 @@ function StudiosListContent() {
         </div>
 
         {/* Filter Controls Bar */}
-        <div className="mt-10 rounded-2xl border border-border bg-surface p-5 md:p-6 shadow-sm space-y-5">
-          {/* Top row: Search input & Sort */}
+        <div className="mt-10 rounded-3xl border border-border bg-surface p-5 md:p-6 shadow-xs space-y-5">
+          {/* Top row: Custom Search Input, Price & Custom Dropdown Sort */}
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <form onSubmit={handleSearchSubmit} className="relative flex-1 max-w-md">
-              <Search
-                size={18}
-                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"
-              />
-              <input
-                type="text"
+            <form onSubmit={handleSearchSubmit} className="flex-1 max-w-md">
+              <CustomInput
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                placeholder="Search by title, location, or equipment..."
-                className="w-full rounded-full border border-border bg-background py-2.5 pl-10 pr-10 text-sm placeholder:text-muted focus:border-accent focus:outline-none"
+                placeholder="Search by title, location, equipment..."
+                leftIcon={<Search size={16} />}
+                clearable
+                onClear={handleClearSearch}
               />
-              {searchInput && (
-                <button
-                  type="button"
-                  onClick={handleClearSearch}
-                  aria-label="Clear search"
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted hover:text-foreground"
-                >
-                  <X size={15} />
-                </button>
-              )}
             </form>
 
             <div className="flex flex-wrap items-center gap-3">
               {/* Price Filter inputs */}
               <div className="flex items-center gap-2 text-xs">
-                <span className="text-muted">Price ($/hr):</span>
+                <span className="text-muted font-semibold">Price ($/hr):</span>
                 <input
                   type="number"
                   placeholder="Min"
@@ -184,7 +174,7 @@ function StudiosListContent() {
                     setMinPrice(e.target.value);
                     setPage(1);
                   }}
-                  className="w-16 rounded-lg border border-border bg-background px-2 py-1.5 text-xs text-foreground focus:border-accent focus:outline-none"
+                  className="w-16 rounded-xl border border-border bg-background px-2.5 py-2 text-xs font-semibold text-foreground focus:border-foreground focus:outline-none transition-colors"
                 />
                 <span className="text-muted">-</span>
                 <input
@@ -196,28 +186,22 @@ function StudiosListContent() {
                     setMaxPrice(e.target.value);
                     setPage(1);
                   }}
-                  className="w-16 rounded-lg border border-border bg-background px-2 py-1.5 text-xs text-foreground focus:border-accent focus:outline-none"
+                  className="w-16 rounded-xl border border-border bg-background px-2.5 py-2 text-xs font-semibold text-foreground focus:border-foreground focus:outline-none transition-colors"
                 />
               </div>
 
-              {/* Sort Selector */}
-              <div className="flex items-center gap-2">
-                <SlidersHorizontal size={14} className="text-muted" />
-                <select
+              {/* Custom Animated Sort Dropdown */}
+              <div className="w-48">
+                <CustomSelect
+                  options={SORT_OPTIONS}
                   value={sort}
-                  onChange={(e) => {
+                  onChange={(val) => {
                     setLoading(true);
-                    setSort(e.target.value);
+                    setSort(val);
                     setPage(1);
                   }}
-                  className="rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground focus:border-accent focus:outline-none"
-                >
-                  {SORT_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
+                  leftIcon={<SlidersHorizontal size={14} />}
+                />
               </div>
             </div>
           </div>
