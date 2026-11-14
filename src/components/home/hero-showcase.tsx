@@ -195,37 +195,40 @@ export function HeroShowcase() {
   return (
     <section
       ref={heroContainerRef}
-      className="relative container-main py-10 md:py-16 lg:py-20 overflow-hidden rounded-3xl"
+      className="relative w-full overflow-hidden py-10 md:py-16 lg:py-20"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* Interactive WebGL DotGrid Canvas (React Bits) */}
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden opacity-50 dark:opacity-40">
+      {/* Full-Bleed Interactive WebGL DotGrid Canvas (React Bits) */}
+      <div className="pointer-events-none absolute inset-0 -z-10 w-full h-full overflow-hidden opacity-60 dark:opacity-45">
         <DotGrid
           baseColor="#9ca3af"
           activeColor="#d97745"
           shape="circle"
           dotSize={3}
-          gap={24}
-          proximity={130}
-          strength={0.8}
+          gap={26}
+          proximity={140}
+          strength={0.85}
           bounce={0.35}
           tension={0.3}
           returnDuration={1.2}
-          shockRadius={300}
+          shockRadius={320}
           shockStrength={4}
           swell={0.5}
           stretch={0.25}
           glow={0.3}
           fade={0.65}
-          opacity={0.5}
+          opacity={0.55}
           intro={true}
           mouseInteraction={true}
           clickShock={true}
         />
+        {/* Soft edge fade for seamless blending into site aesthetics */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background via-background/60 to-transparent" />
       </div>
 
-      <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
+      <div className="container-main relative z-10">
+        <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
         {/* Left Column: Headline & Interactive Filter Dock */}
         <div className="hero-left-block lg:col-span-7 flex flex-col justify-center">
           {/* Badge */}
@@ -453,7 +456,8 @@ export function HeroShowcase() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
   );
 }
 

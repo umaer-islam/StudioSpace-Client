@@ -556,11 +556,15 @@ export function DotGrid({
       raf = requestAnimationFrame(frame);
     };
 
+    let cachedRect = canvas.getBoundingClientRect();
+    const updateRect = () => {
+      cachedRect = canvas.getBoundingClientRect();
+      view.left = cachedRect.left;
+      view.top = cachedRect.top;
+    };
+
     const locate = (event: PointerEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      view.left = rect.left;
-      view.top = rect.top;
-      return [event.clientX - rect.left, event.clientY - rect.top];
+      return [event.clientX - cachedRect.left, event.clientY - cachedRect.top];
     };
 
     const onMove = (event: PointerEvent) => {
@@ -612,10 +616,12 @@ export function DotGrid({
     window.addEventListener("blur", onLeave);
 
     const resizeObserver = new ResizeObserver(() => {
+      updateRect();
       resize();
       wake();
     });
     resizeObserver.observe(canvas);
+    window.addEventListener("scroll", updateRect, { passive: true });
 
     const visibilityObserver = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
@@ -656,6 +662,7 @@ export function DotGrid({
       window.removeEventListener("pointerdown", onDown);
       window.removeEventListener("pointerout", onOut);
       window.removeEventListener("blur", onLeave);
+      window.removeEventListener("scroll", updateRect);
       document.removeEventListener("visibilitychange", onVisibility);
       gl.deleteBuffer(cornerBuffer);
       gl.deleteBuffer(instanceBuffer);
