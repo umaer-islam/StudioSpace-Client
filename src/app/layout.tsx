@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll-provider";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { CinematicReveal } from "@/components/layout/cinematic-reveal";
 import { GradualBlur } from "@/components/react-bits/gradual-blur";
 import { Toaster } from "sonner";
 
@@ -54,6 +55,7 @@ export default function RootLayout({
           enableSystem
         >
           <SmoothScrollProvider>
+            <CinematicReveal />
             <SiteHeader />
             <main className="flex-1 pt-24 sm:pt-28">{children}</main>
             {/* Bottom Progressive Glassmorphic Blur Ramp across the bottom of the viewport */}
