@@ -59,9 +59,9 @@ export default function RootLayout({
             <GradualBlur
               target="page"
               position="top"
-              height="7.5rem"
-              strength={1.8}
-              layers={8}
+              height="14rem"
+              strength={2.5}
+              layers={12}
               curve="bezier"
               zIndex={40}
             />
@@ -71,9 +71,9 @@ export default function RootLayout({
             <GradualBlur
               target="page"
               position="bottom"
-              height="6rem"
-              strength={1.5}
-              layers={8}
+              height="12rem"
+              strength={2.2}
+              layers={10}
               curve="bezier"
               autoHide
               zIndex={40}

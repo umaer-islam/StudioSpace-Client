@@ -238,9 +238,9 @@ function StudioDetailContent({ params }: StudioDetailPageProps) {
           {/* Gradual Blur Ramp at bottom of photography */}
           <GradualBlur
             position="bottom"
-            height="9rem"
-            strength={2}
-            layers={10}
+            height="16rem"
+            strength={3}
+            layers={12}
             curve="bezier"
             zIndex={2}
           />
