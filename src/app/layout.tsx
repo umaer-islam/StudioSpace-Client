@@ -55,27 +55,16 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <SmoothScrollProvider>
-            {/* Top Progressive Blur Ramp under floating navigation */}
-            <GradualBlur
-              target="page"
-              position="top"
-              height="14rem"
-              strength={2.2}
-              layers={6}
-              curve="bezier"
-              zIndex={40}
-            />
             <SiteHeader />
             <main className="flex-1 pt-24 sm:pt-28">{children}</main>
-            {/* Bottom Progressive Blur Ramp with autoHide at page end */}
+            {/* Bottom Progressive Glassmorphic Blur Ramp across the bottom of the screen */}
             <GradualBlur
               target="page"
               position="bottom"
-              height="12rem"
-              strength={2.0}
+              height="10rem"
+              strength={2.4}
               layers={6}
               curve="bezier"
-              autoHide
               zIndex={40}
             />
             <SiteFooter />
