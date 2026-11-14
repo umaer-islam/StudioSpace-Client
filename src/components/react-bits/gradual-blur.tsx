@@ -120,9 +120,10 @@ export function GradualBlur({
       const from = level(i / count);
       const to = level((i + 1) / count);
       const radius = Math.sqrt(Math.max(to * to - from * from, 0));
+      // Using pre-computed static blur pixel radii prevents GPU shader recompilation on scroll
       const filter = [
-        `blur(calc(${radius.toFixed(3)}px * var(--gradual-blur-reveal, 1) * var(--gradual-blur-hover, 1)))`,
-        boost !== 1 ? `saturate(calc(1 + ${(boost - 1).toFixed(4)} * var(--gradual-blur-reveal, 1)))` : "",
+        `blur(${radius.toFixed(2)}px)`,
+        boost !== 1 ? `saturate(${boost.toFixed(3)})` : "",
       ]
         .filter(Boolean)
         .join(" ");
@@ -136,7 +137,9 @@ export function GradualBlur({
         maskImage: mask,
         WebkitMaskImage: mask,
         opacity,
-        transition: `backdrop-filter ${fade}, -webkit-backdrop-filter ${fade}`,
+        transform: "translate3d(0, 0, 0)",
+        WebkitTransform: "translate3d(0, 0, 0)",
+        pointerEvents: "none",
       });
     }
 
@@ -262,6 +265,14 @@ export function GradualBlur({
   const rootStyle: React.CSSProperties = {
     position: target === "page" ? "fixed" : "absolute",
     zIndex,
+    pointerEvents: "none",
+    opacity: "var(--gradual-blur-reveal, 1)",
+    transform: "translate3d(0, 0, 0)",
+    WebkitTransform: "translate3d(0, 0, 0)",
+    backfaceVisibility: "hidden",
+    WebkitBackfaceVisibility: "hidden",
+    contain: "paint layout",
+    willChange: autoHide ? "opacity" : undefined,
     borderTopLeftRadius: corner("top", "left"),
     borderTopRightRadius: corner("top", "right"),
     borderBottomLeftRadius: corner("bottom", "left"),

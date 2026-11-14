@@ -239,8 +239,8 @@ function StudioDetailContent({ params }: StudioDetailPageProps) {
           <GradualBlur
             position="bottom"
             height="16rem"
-            strength={3}
-            layers={12}
+            strength={2.8}
+            layers={6}
             curve="bezier"
             zIndex={2}
           />

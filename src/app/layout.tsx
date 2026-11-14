@@ -60,8 +60,8 @@ export default function RootLayout({
               target="page"
               position="top"
               height="14rem"
-              strength={2.5}
-              layers={12}
+              strength={2.2}
+              layers={6}
               curve="bezier"
               zIndex={40}
             />
@@ -72,8 +72,8 @@ export default function RootLayout({
               target="page"
               position="bottom"
               height="12rem"
-              strength={2.2}
-              layers={10}
+              strength={2.0}
+              layers={6}
               curve="bezier"
               autoHide
               zIndex={40}

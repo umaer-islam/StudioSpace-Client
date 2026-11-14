@@ -44,7 +44,8 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Scroll behavior is driven with GPU-synced virtual physics via Lenis */
+  scroll-behavior: auto !important;
 }
 
 body {

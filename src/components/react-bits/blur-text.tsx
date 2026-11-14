@@ -408,7 +408,11 @@ export function BlurText({
 
   const tinted = Boolean(fromColor) && (phase === "from" || phase === "out");
   const dim = Math.min(6, Math.max(2, blur * 0.3));
-  const pieceStyle = fx.origin && !custom ? { ...PIECE_STYLE, ...fx.origin } : PIECE_STYLE;
+  const pieceStyle: React.CSSProperties = {
+    display: "inline-block",
+    willChange: phase === "in" || phase === "out" ? "transform, opacity" : undefined,
+    ...(fx.origin && !custom ? fx.origin : {}),
+  };
 
   const renderPiece = (index: number) => {
     const piece = pieces[index];
