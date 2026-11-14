@@ -252,28 +252,51 @@ export function HeroShowcase() {
           </p>
 
           {/* Primary CTA Buttons per Rubric */}
-          <div className="hero-anim-subhead mt-6 flex flex-wrap items-center gap-3">
+          <div className="hero-anim-subhead mt-6 flex flex-row items-center gap-2.5 sm:gap-3">
             <Link
               href="/studios"
-              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-neutral-900 px-6 py-3.5 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:bg-black hover:shadow-lg hover:scale-[1.02] active:scale-[0.97] dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100"
+              className="group relative flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-neutral-900 px-5 sm:px-6 py-3 sm:py-3.5 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:bg-black hover:shadow-lg active:scale-[0.97] dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100"
             >
               <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full pointer-events-none" />
-              <Compass size={15} className="relative z-10" />
-              <span className="relative z-10">Explore Studios</span>
-              <ArrowRight size={14} className="relative z-10 transition-transform duration-200 group-hover:translate-x-1" />
+              <Compass size={14} className="relative z-10 shrink-0" />
+              <span className="relative z-10 whitespace-nowrap">Explore Studios</span>
+              <ArrowRight size={13} className="relative z-10 shrink-0 transition-transform duration-200 group-hover:translate-x-1" />
             </Link>
 
             <Link
               href="/add-studio"
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-6 py-3.5 text-xs font-semibold text-foreground hover:bg-surface-secondary transition-colors active:scale-[0.98]"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 rounded-full border border-border bg-surface px-5 sm:px-6 py-3 sm:py-3.5 text-xs font-semibold text-foreground hover:bg-surface-secondary transition-colors active:scale-[0.98] whitespace-nowrap"
             >
-              <Building2 size={15} className="text-accent" />
+              <Building2 size={14} className="text-accent shrink-0" />
               <span>Host Your Space</span>
             </Link>
           </div>
 
-          {/* Interactive Discipline Switcher with Kinetic Rubber Animation */}
-          <div className="mt-8 max-w-full overflow-x-auto pb-1 scrollbar-none">
+          {/* Interactive Discipline Switcher - Mobile Native Touch Scrollable Chips */}
+          <div className="mt-6 block sm:hidden -mx-4 px-4 overflow-x-auto scrollbar-none no-scrollbar">
+            <div className="flex items-center gap-2 w-max py-1">
+              {CATEGORY_TABS.map((tab) => {
+                const active = activeCategory === tab.value;
+                return (
+                  <button
+                    key={tab.value}
+                    type="button"
+                    onClick={() => setActiveCategory(tab.value)}
+                    className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all whitespace-nowrap active:scale-95 ${
+                      active
+                        ? "bg-foreground text-background font-bold shadow-xs scale-[1.02]"
+                        : "bg-surface border border-border text-muted hover:text-foreground"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Interactive Discipline Switcher - Desktop Rubber Kinetic Animation */}
+          <div className="mt-8 hidden sm:block max-w-full overflow-x-auto pb-1 scrollbar-none">
             <RubberSegment
               items={CATEGORY_TABS.map((tab) => ({
                 value: tab.value,
@@ -285,8 +308,8 @@ export function HeroShowcase() {
               size="sm"
               radius={9999}
               inset={3}
-              stretch={80}
-              squash={2.5}
+              stretch={70}
+              squash={2.2}
               speed={1.1}
               draggable={true}
               className="border border-border shadow-xs"
@@ -351,23 +374,22 @@ export function HeroShowcase() {
           </form>
 
           {/* Trust Highlights */}
-          <div className="mt-8 flex flex-wrap items-center gap-6 text-xs text-muted">
+          <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-muted">
             <span className="flex items-center gap-1.5 font-medium">
-              <CheckCircle2 size={15} className="text-accent" />
-              100% Conflict-Free Mutex Scheduling
+              <CheckCircle2 size={14} className="text-accent shrink-0" />
+              <span>100% Conflict-Free Mutex Scheduling</span>
             </span>
             <span className="flex items-center gap-1.5 font-medium">
-              <Star size={14} className="text-amber-500 fill-amber-500" />
-              4.95 Average Creator Rating
+              <Star size={13} className="text-amber-500 fill-amber-500 shrink-0" />
+              <span>4.95 Average Creator Rating</span>
             </span>
-            <span className="flex items-center gap-1.5 font-medium">
-              No Subscription · Pay Hourly
-            </span>
+            <span className="hidden sm:inline text-muted/40">•</span>
+            <span className="font-medium text-muted">No Subscription · Pay Hourly</span>
           </div>
         </div>
 
         {/* Right Column: Interactive Studio Showcase with Image Carousel */}
-        <div className="hero-anim-card lg:col-span-5">
+        <div className="hero-anim-card mt-8 lg:mt-0 lg:col-span-5">
           <div
             ref={visualCardRef}
             className="group relative overflow-hidden rounded-3xl border border-border bg-surface p-3 shadow-lg transition-all"
