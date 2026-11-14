@@ -37,7 +37,7 @@ export function StudioCard({ studio }: StudioCardProps) {
       </Link>
 
       {/* Studio Content */}
-      <div className="flex flex-1 flex-col p-6">
+      <div className="flex flex-1 flex-col p-4 sm:p-5 md:p-6">
         <div className="flex items-start justify-between gap-2">
           <Link
             href={`/studios/${studio._id}`}

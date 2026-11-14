@@ -10,6 +10,12 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  Camera,
+  Video,
+  Mic2,
+  Music2,
+  Palette,
+  Sparkles,
 } from "lucide-react";
 import { Studio, fetchStudios } from "@/lib/api";
 import { StudioCard } from "@/components/studios/studio-card";
@@ -20,14 +26,16 @@ import { CustomButton } from "@/components/ui/custom-button";
 import RubberSegment from "@/components/react-bits/rubber-segment";
 import AnimatedContent from "@/components/react-bits/animated-content";
 
-const CATEGORIES = [
-  "All",
-  "Photo Studio",
-  "Film Stage",
-  "Podcast Lounge",
-  "Music Suite",
-  "Workshop",
+const CATEGORY_ITEMS = [
+  { value: "All", label: "All Spaces", icon: Sparkles },
+  { value: "Photo Studio", label: "Photo Studio", icon: Camera },
+  { value: "Film Stage", label: "Film Stage", icon: Video },
+  { value: "Podcast Lounge", label: "Podcast Lounge", icon: Mic2 },
+  { value: "Music Suite", label: "Music Suite", icon: Music2 },
+  { value: "Workshop", label: "Workshop", icon: Palette },
 ];
+
+const CATEGORIES = CATEGORY_ITEMS.map((item) => item.value);
 
 const SORT_OPTIONS = [
   { label: "Newest First", value: "newest" },
@@ -152,51 +160,57 @@ function StudiosListContent() {
 
         {/* Filter Controls Bar */}
         <AnimatedContent distance={35} duration={0.65} delay={0.1} trigger="mount">
-          <div className="mt-10 rounded-3xl border border-border bg-surface p-5 md:p-6 shadow-xs space-y-5">
-            {/* Top row: Custom Search Input, Price & Custom Dropdown Sort */}
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <form onSubmit={handleSearchSubmit} className="flex-1 max-w-md">
+          <div className="mt-8 sm:mt-10 rounded-3xl border border-border bg-surface p-4 sm:p-5 md:p-6 shadow-xs space-y-4 sm:space-y-5">
+            {/* Top row: Search Bar & Filter Controls */}
+            <div className="flex flex-col gap-3.5 lg:flex-row lg:items-center lg:justify-between">
+              {/* Search Bar */}
+              <form onSubmit={handleSearchSubmit} className="w-full lg:max-w-md">
                 <CustomInput
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
-                  placeholder="Search by title, location, equipment..."
+                  placeholder="Search studios by title, location, gear..."
                   leftIcon={<Search size={16} />}
                   clearable
                   onClear={handleClearSearch}
                 />
               </form>
 
-              <div className="flex flex-wrap items-center gap-3">
-                {/* Price Filter inputs */}
-                <div className="flex items-center gap-2 text-xs">
-                  <span className="text-muted font-semibold">Price ($/hr):</span>
-                  <input
-                    type="number"
-                    placeholder="Min"
-                    value={minPrice}
-                    onChange={(e) => {
-                      setLoading(true);
-                      setMinPrice(e.target.value);
-                      setPage(1);
-                    }}
-                    className="w-16 rounded-xl border border-border bg-background px-2.5 py-2 text-xs font-semibold text-foreground focus:border-foreground focus:outline-none transition-colors"
-                  />
-                  <span className="text-muted">-</span>
-                  <input
-                    type="number"
-                    placeholder="Max"
-                    value={maxPrice}
-                    onChange={(e) => {
-                      setLoading(true);
-                      setMaxPrice(e.target.value);
-                      setPage(1);
-                    }}
-                    className="w-16 rounded-xl border border-border bg-background px-2.5 py-2 text-xs font-semibold text-foreground focus:border-foreground focus:outline-none transition-colors"
-                  />
+              {/* Price Range & Sort Selector */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex items-center gap-2.5 sm:gap-3 w-full lg:w-auto">
+                {/* Price Filter capsule */}
+                <div className="flex items-center justify-between sm:justify-start gap-2 rounded-2xl border border-border bg-surface-secondary/70 px-3 py-2 text-xs">
+                  <span className="text-muted font-medium shrink-0">Price / hr:</span>
+                  <div className="flex items-center gap-1.5 flex-1 max-w-[170px]">
+                    <span className="text-muted text-[11px] font-mono">$</span>
+                    <input
+                      type="number"
+                      placeholder="Min"
+                      value={minPrice}
+                      onChange={(e) => {
+                        setLoading(true);
+                        setMinPrice(e.target.value);
+                        setPage(1);
+                      }}
+                      className="w-full rounded-lg border border-border/80 bg-surface px-2 py-1 text-xs font-semibold text-foreground focus:border-foreground focus:outline-none transition-colors"
+                    />
+                    <span className="text-muted text-xs px-0.5">–</span>
+                    <span className="text-muted text-[11px] font-mono">$</span>
+                    <input
+                      type="number"
+                      placeholder="Max"
+                      value={maxPrice}
+                      onChange={(e) => {
+                        setLoading(true);
+                        setMaxPrice(e.target.value);
+                        setPage(1);
+                      }}
+                      className="w-full rounded-lg border border-border/80 bg-surface px-2 py-1 text-xs font-semibold text-foreground focus:border-foreground focus:outline-none transition-colors"
+                    />
+                  </div>
                 </div>
 
                 {/* Custom Animated Sort Dropdown */}
-                <div className="w-48">
+                <div className="w-full sm:w-48">
                   <CustomSelect
                     options={SORT_OPTIONS}
                     value={sort}
@@ -211,12 +225,37 @@ function StudiosListContent() {
               </div>
             </div>
 
-            {/* Category Tabs with Kinetic Rubber Segment */}
-            <div className="border-t border-border pt-4 max-w-full overflow-x-auto pb-1 scrollbar-none">
+            {/* Mobile Category Scrollable Chips (< 768px) */}
+            <div className="md:hidden -mx-4 px-4 pt-3 border-t border-border/80 overflow-x-auto scrollbar-none">
+              <div className="flex items-center gap-2 pb-1 min-w-max">
+                {CATEGORY_ITEMS.map((cat) => {
+                  const Icon = cat.icon;
+                  const isActive = category === cat.value;
+                  return (
+                    <button
+                      key={cat.value}
+                      type="button"
+                      onClick={() => handleCategoryChange(cat.value)}
+                      className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold transition-all active:scale-95 ${
+                        isActive
+                          ? "bg-neutral-900 text-white shadow-xs dark:bg-white dark:text-neutral-900 font-bold"
+                          : "border border-border bg-surface text-foreground hover:bg-surface-secondary"
+                      }`}
+                    >
+                      <Icon size={13} className={isActive ? "text-accent" : "text-muted"} />
+                      <span>{cat.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Desktop Kinetic RubberSegment (>= 768px) */}
+            <div className="hidden md:block border-t border-border/80 pt-4 overflow-x-auto scrollbar-none">
               <RubberSegment
-                items={CATEGORIES.map((cat) => ({
-                  value: cat,
-                  label: cat === "All" ? "All Spaces" : cat,
+                items={CATEGORY_ITEMS.map((cat) => ({
+                  value: cat.value,
+                  label: cat.label,
                 }))}
                 value={category}
                 onChange={(val) => handleCategoryChange(val)}
@@ -228,7 +267,7 @@ function StudiosListContent() {
                 squash={2.5}
                 speed={1.1}
                 draggable={true}
-                className="border border-border shadow-2xs"
+                className="border border-border shadow-2xs min-w-max"
               />
             </div>
           </div>
