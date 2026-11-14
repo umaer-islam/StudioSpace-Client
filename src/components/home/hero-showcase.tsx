@@ -23,6 +23,8 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+import DotGrid from "@/components/react-bits/dot-grid";
+
 interface StudioSlide {
   id: string;
   title: string;
@@ -192,10 +194,36 @@ export function HeroShowcase() {
   return (
     <section
       ref={heroContainerRef}
-      className="container-main py-10 md:py-16 lg:py-20"
+      className="relative container-main py-10 md:py-16 lg:py-20 overflow-hidden rounded-3xl"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
+      {/* Interactive WebGL DotGrid Canvas (React Bits) */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden opacity-50 dark:opacity-40">
+        <DotGrid
+          baseColor="#9ca3af"
+          activeColor="#d97745"
+          shape="circle"
+          dotSize={3}
+          gap={24}
+          proximity={130}
+          strength={0.8}
+          bounce={0.35}
+          tension={0.3}
+          returnDuration={1.2}
+          shockRadius={300}
+          shockStrength={4}
+          swell={0.5}
+          stretch={0.25}
+          glow={0.3}
+          fade={0.65}
+          opacity={0.5}
+          intro={true}
+          mouseInteraction={true}
+          clickShock={true}
+        />
+      </div>
+
       <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
         {/* Left Column: Headline & Interactive Filter Dock */}
         <div className="hero-left-block lg:col-span-7 flex flex-col justify-center">
