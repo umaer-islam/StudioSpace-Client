@@ -293,15 +293,21 @@ function SiteHeaderContent() {
             <div className="hidden items-center gap-2 sm:flex">
               <Link
                 href="/login"
-                className="rounded-full px-4 py-2 text-xs font-semibold text-muted transition-colors hover:text-foreground"
+                className="rounded-full px-4 py-2 text-xs font-bold text-muted transition-colors hover:text-foreground hover:bg-surface-secondary/70"
               >
                 Log In
               </Link>
               <Link
                 href="/register"
-                className="flex items-center gap-1.5 rounded-full bg-foreground px-4 py-2 text-xs font-bold text-background transition-opacity hover:opacity-90"
+                className="group relative inline-flex items-center gap-1.5 overflow-hidden rounded-full bg-neutral-900 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:bg-black hover:shadow-md hover:scale-[1.02] active:scale-[0.97] dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100"
               >
-                Register <ArrowUpRight size={14} />
+                {/* Subtle Ambient Shimmer */}
+                <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full pointer-events-none" />
+                <span className="relative z-10 font-bold">Register</span>
+                <ArrowUpRight
+                  size={14}
+                  className="relative z-10 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                />
               </Link>
             </div>
           )}
@@ -408,9 +414,10 @@ function SiteHeaderContent() {
                 <Link
                   href="/register"
                   onClick={() => setMenuOpen(false)}
-                  className="flex items-center justify-center rounded-2xl bg-foreground py-2.5 text-xs font-bold text-background hover:opacity-90"
+                  className="flex items-center justify-center gap-1.5 rounded-2xl bg-neutral-900 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-black active:scale-[0.98] dark:bg-white dark:text-neutral-900"
                 >
-                  Register
+                  <span>Register</span>
+                  <ArrowUpRight size={13} />
                 </Link>
               </div>
             )}

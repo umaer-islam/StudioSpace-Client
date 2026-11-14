@@ -226,9 +226,9 @@ export function HeroShowcase() {
                   key={tab.value}
                   type="button"
                   onClick={() => setActiveCategory(tab.value)}
-                  className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${
+                  className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all duration-200 ${
                     active
-                      ? "bg-foreground text-background shadow-xs font-bold"
+                      ? "bg-neutral-900 text-white shadow-xs font-bold scale-[1.02] dark:bg-white dark:text-neutral-900"
                       : "border border-border bg-surface text-muted hover:text-foreground hover:bg-surface-secondary"
                   }`}
                 >
@@ -286,10 +286,11 @@ export function HeroShowcase() {
               {/* Submit CTA */}
               <button
                 type="submit"
-                className="inline-flex items-center justify-center gap-2 rounded-2xl sm:rounded-full bg-foreground px-6 py-3 text-xs font-bold text-background transition-opacity hover:opacity-90 shrink-0"
+                className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl sm:rounded-full bg-neutral-900 px-6 py-3.5 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:bg-black hover:shadow-md hover:scale-[1.02] active:scale-[0.97] dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 shrink-0"
               >
-                <Search size={14} />
-                <span>Find Spaces</span>
+                <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full pointer-events-none" />
+                <Search size={14} className="relative z-10 transition-transform duration-200 group-hover:scale-110" />
+                <span className="relative z-10">Find Spaces</span>
               </button>
             </div>
           </form>
@@ -413,10 +414,10 @@ export function HeroShowcase() {
 
                 <Link
                   href={`/studios/${currentStudio.id}`}
-                  className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-foreground text-background transition-transform hover:scale-105 active:scale-95"
+                  className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-white shadow-sm transition-all duration-200 hover:bg-black hover:scale-110 hover:shadow-md active:scale-95 dark:bg-white dark:text-neutral-900"
                   aria-label={`Book ${currentStudio.title}`}
                 >
-                  <ChevronRight size={18} />
+                  <ChevronRight size={18} className="transition-transform duration-200 group-hover:translate-x-0.5" />
                 </Link>
               </div>
             </div>

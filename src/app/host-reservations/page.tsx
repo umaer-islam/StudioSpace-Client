@@ -207,7 +207,7 @@ export default function HostReservationsPage() {
           </Link>
           <Link
             href="/add-studio"
-            className="rounded-full bg-foreground px-4 py-2 text-xs font-bold text-background hover:opacity-90"
+            className="rounded-full bg-neutral-900 px-5 py-2 text-xs font-bold text-white shadow-sm hover:bg-black hover:scale-[1.02] active:scale-[0.98] dark:bg-white dark:text-neutral-900"
           >
             Add Studio
           </Link>

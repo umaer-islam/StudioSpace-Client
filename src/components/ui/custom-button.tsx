@@ -30,7 +30,7 @@ export const CustomButton = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variantStyles = {
       primary:
-        "bg-foreground text-background shadow-xs hover:opacity-90 hover:shadow-md",
+        "bg-neutral-900 text-white shadow-sm hover:bg-black hover:shadow-md dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100",
       secondary:
         "bg-surface-secondary text-foreground border border-border hover:bg-surface-secondary/80 hover:border-foreground/20",
       outline:

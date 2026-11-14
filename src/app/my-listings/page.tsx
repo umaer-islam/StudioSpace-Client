@@ -134,7 +134,7 @@ export default function MyListingsPage() {
           </Link>
           <Link
             href="/add-studio"
-            className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-4 py-2 text-xs font-bold text-background transition-opacity hover:opacity-90"
+            className="inline-flex items-center gap-1.5 rounded-full bg-neutral-900 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:bg-black hover:shadow-md hover:scale-[1.02] active:scale-[0.98] dark:bg-white dark:text-neutral-900"
           >
             <PlusCircle size={15} /> Add Studio
           </Link>
@@ -164,7 +164,7 @@ export default function MyListingsPage() {
           <div className="mt-6">
             <Link
               href="/add-studio"
-              className="inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-xs font-bold text-background hover:opacity-90"
+              className="inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-xs font-bold text-white shadow-sm hover:bg-black hover:scale-[1.02] active:scale-[0.98] dark:bg-white dark:text-neutral-900"
             >
               <PlusCircle size={15} /> Create First Listing
             </Link>

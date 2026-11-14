@@ -218,10 +218,11 @@ export default function Home() {
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link
                   href="/studios"
-                  className="inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3.5 text-xs font-bold text-background transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-sm"
+                  className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-neutral-900 px-6 py-3.5 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:bg-black hover:shadow-lg hover:scale-[1.02] active:scale-[0.97] dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100"
                 >
-                  <span>Explore Studios</span>
-                  <ArrowRight size={15} />
+                  <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full pointer-events-none" />
+                  <span className="relative z-10">Explore Studios</span>
+                  <ArrowRight size={15} className="relative z-10 transition-transform duration-200 group-hover:translate-x-1" />
                 </Link>
                 <Link
                   href="/add-studio"
