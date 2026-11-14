@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-react";
+import RubberSegment from "@/components/react-bits/rubber-segment";
 
 interface CustomCalendarProps {
   selectedDate: string; // "YYYY-MM-DD"
@@ -30,6 +31,45 @@ export function CustomCalendar({
 
   const todayStr = new Date().toISOString().split("T")[0];
   const minAllowed = minDate || todayStr;
+
+  const getTomorrowStr = () => {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    return d.toISOString().split("T")[0];
+  };
+
+  const getWeekendStr = () => {
+    const d = new Date();
+    const day = d.getDay();
+    const diff = (6 - day + 7) % 7 || 7;
+    d.setDate(d.getDate() + diff);
+    return d.toISOString().split("T")[0];
+  };
+
+  const tomorrowStr = getTomorrowStr();
+  const weekendStr = getWeekendStr();
+
+  const currentPreset =
+    selectedDate === todayStr
+      ? "today"
+      : selectedDate === tomorrowStr
+      ? "tomorrow"
+      : selectedDate === weekendStr
+      ? "weekend"
+      : "custom";
+
+  const handlePresetChange = (preset: string) => {
+    let target = "";
+    if (preset === "today") target = todayStr;
+    else if (preset === "tomorrow") target = tomorrowStr;
+    else if (preset === "weekend") target = weekendStr;
+    if (target) {
+      onSelectDate(target);
+      const parsed = new Date(target);
+      setViewYear(parsed.getFullYear());
+      setViewMonth(parsed.getMonth());
+    }
+  };
 
   const handlePrevMonth = () => {
     if (viewMonth === 0) {
@@ -83,7 +123,28 @@ export function CustomCalendar({
   }
 
   return (
-    <div className={`w-full rounded-2xl border border-border bg-surface p-4 shadow-xs ${className}`}>
+    <div className={`w-full rounded-2xl border border-border bg-surface p-4 shadow-xs space-y-3.5 ${className}`}>
+      {/* Quick Date Presets with Kinetic Rubber Segment */}
+      <div className="w-full">
+        <RubberSegment
+          items={[
+            { value: "today", label: "Today" },
+            { value: "tomorrow", label: "Tomorrow" },
+            { value: "weekend", label: "Weekend" },
+            { value: "custom", label: "Custom" },
+          ]}
+          value={currentPreset}
+          onChange={handlePresetChange}
+          equalSlots={true}
+          size="sm"
+          radius={10}
+          inset={2}
+          stretch={50}
+          squash={2}
+          className="w-full border border-border"
+        />
+      </div>
+
       {/* Month & Year Navigation Header */}
       <div className="flex items-center justify-between pb-3 border-b border-border">
         <div className="flex items-center gap-2">

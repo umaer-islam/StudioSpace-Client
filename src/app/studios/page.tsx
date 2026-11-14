@@ -17,6 +17,7 @@ import { StudioSkeleton } from "@/components/studios/studio-skeleton";
 import { CustomSelect } from "@/components/ui/custom-select";
 import { CustomInput } from "@/components/ui/custom-input";
 import { CustomButton } from "@/components/ui/custom-button";
+import RubberSegment from "@/components/react-bits/rubber-segment";
 
 const CATEGORIES = [
   "All",
@@ -206,25 +207,25 @@ function StudiosListContent() {
             </div>
           </div>
 
-          {/* Category Tabs */}
-          <div className="flex flex-wrap gap-2 border-t border-border pt-4">
-            {CATEGORIES.map((cat) => {
-              const active = category === cat;
-              return (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => handleCategoryChange(cat)}
-                  className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-all ${
-                    active
-                      ? "bg-foreground text-background shadow"
-                      : "border border-border bg-background text-muted hover:border-accent hover:text-foreground"
-                  }`}
-                >
-                  {cat === "All" ? "All Spaces" : cat}
-                </button>
-              );
-            })}
+          {/* Category Tabs with Kinetic Rubber Segment */}
+          <div className="border-t border-border pt-4 max-w-full overflow-x-auto pb-1 scrollbar-none">
+            <RubberSegment
+              items={CATEGORIES.map((cat) => ({
+                value: cat,
+                label: cat === "All" ? "All Spaces" : cat,
+              }))}
+              value={category}
+              onChange={(val) => handleCategoryChange(val)}
+              equalSlots={false}
+              size="sm"
+              radius={9999}
+              inset={3}
+              stretch={80}
+              squash={2.5}
+              speed={1.1}
+              draggable={true}
+              className="border border-border shadow-2xs"
+            />
           </div>
         </div>
 

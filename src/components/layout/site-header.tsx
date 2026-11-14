@@ -23,6 +23,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useSession, signOut } from "@/lib/auth-client";
+import RubberSegment from "@/components/react-bits/rubber-segment";
 
 const navigation = [
   { label: "Home", href: "/" },
@@ -237,14 +238,40 @@ function SiteHeaderContent() {
 
         {/* Right Section: Theme Toggle + Auth Controls */}
         <div className="flex items-center gap-2.5 sm:gap-3">
-          {/* Theme Toggle Button */}
+          {/* Desktop Theme Segmented Switcher with Rubber Elasticity */}
+          <div className="hidden sm:inline-flex items-center">
+            <RubberSegment
+              items={[
+                {
+                  value: "light",
+                  label: <Sun size={14} className="shrink-0" />,
+                },
+                {
+                  value: "dark",
+                  label: <Moon size={14} className="shrink-0" />,
+                },
+              ]}
+              value={resolvedTheme === "dark" ? "dark" : "light"}
+              onChange={(val) => setTheme(val)}
+              equalSlots={true}
+              size="sm"
+              radius={9999}
+              inset={2}
+              stretch={35}
+              squash={2}
+              className="border border-border/80 shadow-2xs"
+              aria-label="Color theme switcher"
+            />
+          </div>
+
+          {/* Mobile Theme Toggle Button */}
           <button
             type="button"
             onClick={() =>
               setTheme(resolvedTheme === "dark" ? "light" : "dark")
             }
             aria-label="Toggle color theme"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
+            className="flex sm:hidden h-9 w-9 items-center justify-center rounded-full border border-border text-muted transition-colors hover:bg-surface-secondary hover:text-foreground"
           >
             <Sun size={17} className="hidden dark:block" />
             <Moon size={17} className="block dark:hidden" />
@@ -443,9 +470,35 @@ function SiteHeaderContent() {
             <span className="text-[11px] font-bold uppercase tracking-wider text-muted">
               Navigation
             </span>
-            <span className="rounded-full bg-accent/10 px-2.5 py-0.5 text-[10px] font-bold text-accent">
-              Explore Studios
-            </span>
+            <RubberSegment
+              items={[
+                {
+                  value: "light",
+                  label: (
+                    <span className="flex items-center gap-1.5 text-xs font-semibold">
+                      <Sun size={12} /> Light
+                    </span>
+                  ),
+                },
+                {
+                  value: "dark",
+                  label: (
+                    <span className="flex items-center gap-1.5 text-xs font-semibold">
+                      <Moon size={12} /> Dark
+                    </span>
+                  ),
+                },
+              ]}
+              value={resolvedTheme === "dark" ? "dark" : "light"}
+              onChange={(val) => setTheme(val)}
+              equalSlots={true}
+              size="sm"
+              radius={9999}
+              inset={2}
+              stretch={30}
+              squash={2}
+              className="border border-border shadow-2xs"
+            />
           </div>
 
           <nav className="flex flex-col gap-1.5">

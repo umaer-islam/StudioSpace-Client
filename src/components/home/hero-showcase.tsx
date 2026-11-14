@@ -24,6 +24,7 @@ if (typeof window !== "undefined") {
 }
 
 import DotGrid from "@/components/react-bits/dot-grid";
+import RubberSegment from "@/components/react-bits/rubber-segment";
 
 interface StudioSlide {
   id: string;
@@ -245,25 +246,25 @@ export function HeroShowcase() {
             Book verified daylight lofts, cinema soundstages, and acoustic podcast rooms by the hour. Protected by atomic schedule mutex locking with zero double-bookings.
           </p>
 
-          {/* Interactive Discipline Tabs */}
-          <div className="mt-8 flex flex-wrap items-center gap-1.5">
-            {CATEGORY_TABS.map((tab) => {
-              const active = activeCategory === tab.value;
-              return (
-                <button
-                  key={tab.value}
-                  type="button"
-                  onClick={() => setActiveCategory(tab.value)}
-                  className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all duration-200 ${
-                    active
-                      ? "bg-neutral-900 text-white shadow-xs font-bold scale-[1.02] dark:bg-white dark:text-neutral-900"
-                      : "border border-border bg-surface text-muted hover:text-foreground hover:bg-surface-secondary"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              );
-            })}
+          {/* Interactive Discipline Switcher with Kinetic Rubber Animation */}
+          <div className="mt-8 max-w-full overflow-x-auto pb-1 scrollbar-none">
+            <RubberSegment
+              items={CATEGORY_TABS.map((tab) => ({
+                value: tab.value,
+                label: tab.label,
+              }))}
+              value={activeCategory}
+              onChange={(val) => setActiveCategory(val)}
+              equalSlots={false}
+              size="sm"
+              radius={9999}
+              inset={3}
+              stretch={80}
+              squash={2.5}
+              speed={1.1}
+              draggable={true}
+              className="border border-border shadow-xs"
+            />
           </div>
 
           {/* Floating Search Dock */}

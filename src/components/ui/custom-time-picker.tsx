@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Clock, Sun, Moon, Sunset, Check } from "lucide-react";
+import RubberSegment from "@/components/react-bits/rubber-segment";
 
 interface CustomTimePickerProps {
   startTime: string;
@@ -98,44 +99,48 @@ export function CustomTimePicker({
         </div>
       </div>
 
-      {/* Period Tabs: Morning, Afternoon, Evening */}
-      <div className="flex rounded-xl bg-surface-secondary p-1">
-        <button
-          type="button"
-          onClick={() => setActiveTab("morning")}
-          className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-semibold transition-all ${
-            activeTab === "morning"
-              ? "bg-surface text-foreground shadow-2xs font-bold"
-              : "text-muted hover:text-foreground"
-          }`}
-        >
-          <Sun size={13} />
-          <span>Morning</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab("afternoon")}
-          className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-semibold transition-all ${
-            activeTab === "afternoon"
-              ? "bg-surface text-foreground shadow-2xs font-bold"
-              : "text-muted hover:text-foreground"
-          }`}
-        >
-          <Sunset size={13} />
-          <span>Afternoon</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab("evening")}
-          className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-semibold transition-all ${
-            activeTab === "evening"
-              ? "bg-surface text-foreground shadow-2xs font-bold"
-              : "text-muted hover:text-foreground"
-          }`}
-        >
-          <Moon size={13} />
-          <span>Evening</span>
-        </button>
+      {/* Period Tabs: Morning, Afternoon, Evening with Rubber Animation */}
+      <div className="w-full">
+        <RubberSegment
+          items={[
+            {
+              value: "morning",
+              label: (
+                <span className="flex items-center gap-1.5">
+                  <Sun size={13} />
+                  <span>Morning</span>
+                </span>
+              ),
+            },
+            {
+              value: "afternoon",
+              label: (
+                <span className="flex items-center gap-1.5">
+                  <Sunset size={13} />
+                  <span>Afternoon</span>
+                </span>
+              ),
+            },
+            {
+              value: "evening",
+              label: (
+                <span className="flex items-center gap-1.5">
+                  <Moon size={13} />
+                  <span>Evening</span>
+                </span>
+              ),
+            },
+          ]}
+          value={activeTab}
+          onChange={(val) => setActiveTab(val as "morning" | "afternoon" | "evening")}
+          equalSlots={true}
+          size="sm"
+          radius={12}
+          inset={2}
+          stretch={60}
+          squash={2}
+          className="w-full border border-border"
+        />
       </div>
 
       {/* Slots Grid */}
