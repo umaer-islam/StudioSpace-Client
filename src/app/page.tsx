@@ -12,7 +12,7 @@ import {
   CalendarCheck,
 } from "lucide-react";
 import { FeaturedStudios } from "@/components/home/featured-studios";
-import { CinematicHero } from "@/components/home/cinematic-hero";
+import { CleanHero } from "@/components/home/clean-hero";
 
 const categories = [
   {
@@ -77,8 +77,8 @@ const steps = [
 export default function Home() {
   return (
     <>
-      {/* CINEMATIC HERO */}
-      <CinematicHero />
+      {/* CLEAN EDITORIAL HERO */}
+      <CleanHero />
 
       {/* CATEGORIES */}
       <section className="section-padding">
