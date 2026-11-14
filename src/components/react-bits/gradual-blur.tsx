@@ -81,7 +81,7 @@ export interface GradualBlurProps {
 export function GradualBlur({
   position = "bottom",
   target = "parent",
-  height = "6rem",
+  height = "8rem",
   width,
   strength = 2,
   layers = 8,
