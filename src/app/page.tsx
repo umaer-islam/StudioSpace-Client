@@ -154,23 +154,46 @@ export default function Home() {
       </section>
 
       {/* AMBIENT RUNNING TEXT LOOP MARQUEE RIBBON */}
-      <section className="relative w-full overflow-hidden py-4 -my-4 sm:py-6 sm:-my-6 pointer-events-auto" aria-label="Studio categories marquee">
-        <TextLoop
-          text="DAYLIGHT LOFTS ✦ SOUNDSTAGES ✦ PODCAST LOUNGES ✦ MUSIC SUITES ✦ CERAMIC WORKSHOPS ✦ ATOMIC SCHEDULING ✦ VERIFIED ACOUSTICS"
-          shape="wave"
-          speed={60}
-          curviness={22}
-          fontSize={22}
-          fontWeight={800}
-          letterSpacing={2}
-          ribbon={true}
-          ribbonColor="#d97745"
-          color="#ffffff"
-          ribbonWidth={56}
-          edgeFade={0.3}
-          pauseOnHover={true}
-          viewBox="0 180 1200 160"
-        />
+      <section className="relative w-full overflow-hidden py-6 sm:py-8 pointer-events-auto" aria-label="Studio categories marquee">
+        {/* Mobile View: High-impact bold ribbon with readable typography & full-bleed proportion */}
+        <div className="block sm:hidden filter drop-shadow-sm">
+          <TextLoop
+            text="DAYLIGHT LOFTS ✦ SOUNDSTAGES ✦ PODCAST LOUNGES ✦ MUSIC SUITES ✦ CERAMIC WORKSHOPS ✦ ATOMIC SCHEDULING ✦ VERIFIED ACOUSTICS"
+            shape="wave"
+            speed={42}
+            curviness={18}
+            fontSize={46}
+            fontWeight={800}
+            letterSpacing={2}
+            ribbon={true}
+            ribbonColor="#d97745"
+            color="#ffffff"
+            ribbonWidth={130}
+            edgeFade={0.12}
+            pauseOnHover={true}
+            viewBox="0 150 1200 220"
+          />
+        </div>
+
+        {/* Tablet & Desktop View: Sleek architectural marquee wave */}
+        <div className="hidden sm:block">
+          <TextLoop
+            text="DAYLIGHT LOFTS ✦ SOUNDSTAGES ✦ PODCAST LOUNGES ✦ MUSIC SUITES ✦ CERAMIC WORKSHOPS ✦ ATOMIC SCHEDULING ✦ VERIFIED ACOUSTICS"
+            shape="wave"
+            speed={55}
+            curviness={22}
+            fontSize={26}
+            fontWeight={800}
+            letterSpacing={2}
+            ribbon={true}
+            ribbonColor="#d97745"
+            color="#ffffff"
+            ribbonWidth={68}
+            edgeFade={0.25}
+            pauseOnHover={true}
+            viewBox="0 180 1200 160"
+          />
+        </div>
       </section>
 
       {/* FEATURED STUDIOS (API INTEGRATED) */}
