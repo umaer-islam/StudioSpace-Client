@@ -154,24 +154,24 @@ export default function Home() {
       </section>
 
       {/* AMBIENT RUNNING TEXT LOOP MARQUEE RIBBON */}
-      <section className="relative w-full overflow-hidden py-6 sm:py-8 pointer-events-auto" aria-label="Studio categories marquee">
+      <section className="relative w-full overflow-hidden py-4 sm:py-6 pointer-events-auto" aria-label="Studio categories marquee">
         {/* Mobile View: High-impact bold ribbon with readable typography & full-bleed proportion */}
-        <div className="block sm:hidden filter drop-shadow-sm">
+        <div className="block sm:hidden">
           <TextLoop
             text="DAYLIGHT LOFTS ✦ SOUNDSTAGES ✦ PODCAST LOUNGES ✦ MUSIC SUITES ✦ CERAMIC WORKSHOPS ✦ ATOMIC SCHEDULING ✦ VERIFIED ACOUSTICS"
             shape="wave"
-            speed={42}
-            curviness={18}
-            fontSize={46}
+            speed={40}
+            curviness={16}
+            fontSize={36}
             fontWeight={800}
-            letterSpacing={2}
+            letterSpacing={3}
             ribbon={true}
             ribbonColor="#d97745"
             color="#ffffff"
-            ribbonWidth={130}
+            ribbonWidth={90}
             edgeFade={0.12}
             pauseOnHover={true}
-            viewBox="0 150 1200 220"
+            viewBox="0 170 1200 180"
           />
         </div>
 
@@ -181,14 +181,14 @@ export default function Home() {
             text="DAYLIGHT LOFTS ✦ SOUNDSTAGES ✦ PODCAST LOUNGES ✦ MUSIC SUITES ✦ CERAMIC WORKSHOPS ✦ ATOMIC SCHEDULING ✦ VERIFIED ACOUSTICS"
             shape="wave"
             speed={55}
-            curviness={22}
-            fontSize={26}
+            curviness={20}
+            fontSize={24}
             fontWeight={800}
             letterSpacing={2}
             ribbon={true}
             ribbonColor="#d97745"
             color="#ffffff"
-            ribbonWidth={68}
+            ribbonWidth={64}
             edgeFade={0.25}
             pauseOnHover={true}
             viewBox="0 180 1200 160"

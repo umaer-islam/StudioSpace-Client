@@ -245,7 +245,14 @@ export function TextLoop({
       }
       if (!length) return;
 
-      const repsFor = (total: number) => (unitWidth > 0 ? Math.max(1, Math.round(total / unitWidth)) : 1);
+      const repsFor = (total: number) => {
+        if (unitWidth <= 0) return 1;
+        if (shape === "circle" || shape === "infinity") {
+          return Math.max(1, Math.round(total / unitWidth));
+        }
+        // For open wave and line shapes, generate ample repetitions so characters are never squashed
+        return Math.max(2, Math.ceil((total * 1.6) / unitWidth) + 1);
+      };
       const next = { length, reps: repsFor(length), crossLength, crossReps: repsFor(crossLength) };
       setMetrics((prev) =>
         prev.length === next.length &&
@@ -471,8 +478,10 @@ export function TextLoop({
 
   const loopText = unit.repeat(metrics.reps);
   const crossText = unit.repeat(metrics.crossReps);
-  const fitLength = metrics.length || undefined;
-  const crossFit = metrics.crossLength || undefined;
+  // Never force textLength on wave or line paths because SVG will crush and collapse letters together
+  const isClosedLoop = shape === "circle" || shape === "infinity";
+  const fitLength = isClosedLoop ? metrics.length || undefined : undefined;
+  const crossFit = isClosedLoop ? metrics.crossLength || undefined : undefined;
   const paint = (ink: string, opacity: number) =>
     outline
       ? {
