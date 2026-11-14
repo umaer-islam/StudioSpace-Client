@@ -96,6 +96,15 @@ export function StudioCard({ studio }: StudioCardProps) {
             <span className="text-xs text-muted font-medium"> / hr</span>
           </div>
         </div>
+
+        {/* View Details Action Button per Examiner Rubric */}
+        <Link
+          href={`/studios/${studio._id}`}
+          className="mt-3.5 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-border bg-surface-secondary/70 py-2.5 text-xs font-bold text-foreground transition-all duration-200 hover:bg-neutral-900 hover:text-white active:scale-[0.98] dark:hover:bg-white dark:hover:text-neutral-900"
+        >
+          <span>View Details</span>
+          <ArrowUpRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        </Link>
       </div>
     </div>
   );

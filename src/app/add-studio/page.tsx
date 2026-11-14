@@ -3,6 +3,7 @@
 import { useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { toast } from "sonner";
 import { useSession } from "@/lib/auth-client";
 import { createStudio, CreateStudioPayload } from "@/lib/api";
 import { CustomSelect } from "@/components/ui/custom-select";
@@ -169,8 +170,10 @@ export default function AddStudioPage() {
 
         const res = await createStudio(payload);
         if (res.success && res.data) {
+          toast.success("Studio published successfully!");
           router.push("/my-listings");
         } else {
+          toast.error(res.message || "Failed to create studio listing");
           setError(res.message || "Failed to create studio listing");
         }
       } catch (err: unknown) {

@@ -1,5 +1,9 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
-import { Aperture, ArrowUpRight } from "lucide-react";
+import { Aperture, ArrowRight, ArrowUpRight, Mail } from "lucide-react";
+import { toast } from "sonner";
 
 const footerLinks = [
   { label: "Home", href: "/" },
@@ -17,9 +21,22 @@ const categories = [
 ];
 
 export function SiteFooter() {
+  const [email, setEmail] = useState("");
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim() || !email.includes("@")) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+    toast.success("Thank you for subscribing to StudioSpace dispatch!");
+    setEmail("");
+  };
+
   return (
     <footer className="border-t border-border bg-surface">
       <div className="container-main grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-4">
+        {/* Brand & Mission Statement */}
         <div className="lg:col-span-1">
           <Link href="/" className="flex items-center gap-2.5">
             <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-foreground text-background">
@@ -30,8 +47,7 @@ export function SiteFooter() {
             </span>
           </Link>
           <p className="mt-5 max-w-xs text-sm leading-7 text-muted">
-            A space for every creative vision. Discover inspiring studios and
-            bring your next great idea to life.
+            A peer-to-peer marketplace for creative spaces. Discover inspiring studios, book verified hours, and bring your visions to life.
           </p>
           <div className="mt-6 flex gap-3">
             <a
@@ -39,7 +55,7 @@ export function SiteFooter() {
               target="_blank"
               rel="noreferrer"
               aria-label="Instagram"
-              className="rounded-full border border-border p-2.5 hover:text-accent"
+              className="rounded-full border border-border p-2.5 text-foreground hover:text-accent transition-colors"
             >
               <svg
                 width="17"
@@ -61,7 +77,7 @@ export function SiteFooter() {
               target="_blank"
               rel="noreferrer"
               aria-label="Facebook"
-              className="rounded-full border border-border p-2.5 hover:text-accent"
+              className="rounded-full border border-border p-2.5 text-foreground hover:text-accent transition-colors"
             >
               <svg
                 width="17"
@@ -81,7 +97,7 @@ export function SiteFooter() {
               target="_blank"
               rel="noreferrer"
               aria-label="LinkedIn"
-              className="rounded-full border border-border p-2.5 hover:text-accent"
+              className="rounded-full border border-border p-2.5 text-foreground hover:text-accent transition-colors"
             >
               <svg
                 width="17"
@@ -98,20 +114,22 @@ export function SiteFooter() {
                 <circle cx="4" cy="4" r="2" />
               </svg>
             </a>
+            {/* Modern X logo instead of old Twitter bird per specification */}
             <a
               href="https://x.com/"
               target="_blank"
               rel="noreferrer"
               aria-label="X"
-              className="rounded-full border border-border p-2.5 hover:text-accent"
+              className="rounded-full border border-border p-2.5 text-foreground hover:text-accent transition-colors"
             >
               <span className="text-sm font-bold">𝕏</span>
             </a>
           </div>
         </div>
 
+        {/* Quick Links */}
         <div>
-          <h3 className="font-semibold">Quick Links</h3>
+          <h3 className="font-semibold text-foreground">Quick Links</h3>
           <ul className="mt-5 space-y-4">
             {footerLinks.map((link) => (
               <li key={link.label}>
@@ -126,8 +144,9 @@ export function SiteFooter() {
           </ul>
         </div>
 
+        {/* Studio Categories */}
         <div>
-          <h3 className="font-semibold">Studio Categories</h3>
+          <h3 className="font-semibold text-foreground">Studio Categories</h3>
           <ul className="mt-5 space-y-4">
             {categories.map((category) => (
               <li key={category}>
@@ -142,24 +161,48 @@ export function SiteFooter() {
           </ul>
         </div>
 
+        {/* Newsletter Subscription per Specification */}
         <div>
-          <h3 className="font-semibold">Stay Inspired</h3>
-          <p className="mt-5 text-sm leading-7 text-muted">
-            Discover new creative spaces and inspiration for your next project.
+          <h3 className="font-semibold text-foreground">Studio Dispatch</h3>
+          <p className="mt-4 text-sm leading-relaxed text-muted">
+            Weekly curated daylight lofts, audio gear drops, and creator availability.
           </p>
-          <Link
-            href="/studios"
-            className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-accent hover:underline"
-          >
-            Explore Studios <ArrowUpRight size={16} />
-          </Link>
+
+          <form onSubmit={handleSubscribe} className="mt-5 space-y-2">
+            <div className="relative">
+              <Mail
+                size={16}
+                className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"
+              />
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="creator@studiospace.com"
+                className="w-full rounded-2xl border border-border bg-background py-2.5 pl-10 pr-4 text-xs text-foreground placeholder:text-muted/60 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+              />
+            </div>
+            <button
+              type="submit"
+              className="inline-flex w-full items-center justify-center gap-1.5 rounded-2xl bg-neutral-900 px-4 py-2.5 text-xs font-bold text-white shadow-xs transition-all hover:bg-black active:scale-[0.98] dark:bg-white dark:text-neutral-900"
+            >
+              <span>Subscribe to Dispatch</span>
+              <ArrowRight size={13} />
+            </button>
+          </form>
         </div>
       </div>
 
+      {/* Copyright & Terms Notice */}
       <div className="border-t border-border">
         <div className="container-main flex flex-col justify-between gap-4 py-6 text-xs text-muted sm:flex-row">
-          <p>© 2026 StudioSpace. All rights reserved.</p>
-          <p>Made for creators, by the creative community.</p>
+          <p>© 2026 StudioSpace. All rights reserved. • Peer-to-peer creative studio marketplace.</p>
+          <div className="flex items-center gap-4">
+            <Link href="/#about" className="hover:text-foreground transition-colors">Privacy Policy</Link>
+            <span>•</span>
+            <Link href="/#how-it-works" className="hover:text-foreground transition-colors">Terms of Service</Link>
+          </div>
         </div>
       </div>
     </footer>

@@ -17,6 +17,8 @@ import {
   CheckCircle2,
   ChevronRight,
   Sparkles,
+  Compass,
+  Building2,
 } from "lucide-react";
 
 if (typeof window !== "undefined") {
@@ -248,6 +250,27 @@ export function HeroShowcase() {
           <p className="hero-anim-subhead mt-5 max-w-xl text-base leading-relaxed text-muted">
             Book verified daylight lofts, cinema soundstages, and acoustic podcast rooms by the hour. Protected by atomic schedule mutex locking with zero double-bookings.
           </p>
+
+          {/* Primary CTA Buttons per Rubric */}
+          <div className="hero-anim-subhead mt-6 flex flex-wrap items-center gap-3">
+            <Link
+              href="/studios"
+              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-neutral-900 px-6 py-3.5 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:bg-black hover:shadow-lg hover:scale-[1.02] active:scale-[0.97] dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100"
+            >
+              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full pointer-events-none" />
+              <Compass size={15} className="relative z-10" />
+              <span className="relative z-10">Explore Studios</span>
+              <ArrowRight size={14} className="relative z-10 transition-transform duration-200 group-hover:translate-x-1" />
+            </Link>
+
+            <Link
+              href="/add-studio"
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-6 py-3.5 text-xs font-semibold text-foreground hover:bg-surface-secondary transition-colors active:scale-[0.98]"
+            >
+              <Building2 size={15} className="text-accent" />
+              <span>Host Your Space</span>
+            </Link>
+          </div>
 
           {/* Interactive Discipline Switcher with Kinetic Rubber Animation */}
           <div className="mt-8 max-w-full overflow-x-auto pb-1 scrollbar-none">

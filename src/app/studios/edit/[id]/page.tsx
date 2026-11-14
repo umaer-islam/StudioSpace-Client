@@ -3,6 +3,7 @@
 import { useState, useEffect, useTransition, use, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { toast } from "sonner";
 import { useSession } from "@/lib/auth-client";
 import {
   fetchStudioById,
@@ -198,8 +199,10 @@ function EditStudioContent({
 
         const res = await updateStudio(resolvedParams.id, payload);
         if (res.success) {
+          toast.success("Studio listing updated successfully!");
           router.push("/my-listings");
         } else {
+          toast.error(res.message || "Failed to update studio");
           setError(res.message || "Failed to update studio");
         }
       } catch (err: unknown) {

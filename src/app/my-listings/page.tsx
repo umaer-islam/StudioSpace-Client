@@ -4,6 +4,7 @@ import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { toast } from "sonner";
 import { useSession } from "@/lib/auth-client";
 import { fetchHostListings, deleteStudio, Studio } from "@/lib/api";
 import AnimatedContent from "@/components/react-bits/animated-content";
@@ -103,10 +104,13 @@ export default function MyListingsPage() {
     startDeleteTransition(async () => {
       try {
         await deleteStudio(studio._id);
+        toast.success(`"${studio.title}" listing deleted successfully`);
         setListings((prev) => prev.filter((s) => s._id !== studio._id));
         setDeletingId(null);
       } catch (err: unknown) {
-        setActionError(err instanceof Error ? err.message : "Deletion failed");
+        const msg = err instanceof Error ? err.message : "Deletion failed";
+        toast.error(msg);
+        setActionError(msg);
       }
     });
   };

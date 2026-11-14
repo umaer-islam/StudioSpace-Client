@@ -4,6 +4,7 @@ import { useEffect, useState, useTransition, useSyncExternalStore } from "react"
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   Calendar,
   Clock,
@@ -14,6 +15,7 @@ import {
   Loader2,
   CalendarDays,
   ArrowRight,
+  FileText,
 } from "lucide-react";
 import {
   Booking,
@@ -86,13 +88,164 @@ export default function MyBookingsPage() {
     startActionTransition(async () => {
       try {
         await cancelBooking(cancellingBooking._id, cancelReason.trim() || undefined);
+        toast.success("Reservation cancelled successfully");
         setCancellingBooking(null);
         setCancelReason("");
         setRefreshTrigger((prev) => prev + 1);
       } catch (err: unknown) {
-        setActionError(err instanceof Error ? err.message : "Cancellation failed");
+        const msg = err instanceof Error ? err.message : "Cancellation failed";
+        setActionError(msg);
+        toast.error(msg);
       }
     });
+  };
+
+  const handleDownloadInvoice = (booking: Booking) => {
+    const start = new Date(booking.startTime);
+    const end = new Date(booking.endTime);
+    const invoiceNumber = `INV-${booking._id.slice(-6).toUpperCase()}-${new Date().getFullYear()}`;
+    const invoiceDate = new Date(booking.createdAt).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    const shootDate = start.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    const shootTime = `${start.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} – ${end.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) {
+      toast.error("Please allow pop-ups to download PDF invoice");
+      return;
+    }
+
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>StudioSpace Invoice ${invoiceNumber}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    body { padding: 40px; color: #1c1917; background: #fff; line-height: 1.5; font-size: 14px; }
+    .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #e7e5e4; padding-bottom: 24px; margin-bottom: 32px; }
+    .brand { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
+    .brand span { color: #f97316; }
+    .invoice-tag { font-size: 12px; font-weight: 700; color: #16a34a; background: #dcfce7; padding: 4px 10px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 36px; }
+    .meta-block h4 { font-size: 11px; font-weight: 700; color: #78716c; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+    .meta-block p { font-size: 14px; color: #1c1917; font-weight: 500; }
+    .table { width: 100%; border-collapse: collapse; margin-bottom: 32px; }
+    .table th { background: #f5f5f4; text-align: left; padding: 12px 16px; font-size: 12px; font-weight: 700; color: #44403c; text-transform: uppercase; letter-spacing: 0.5px; }
+    .table td { padding: 16px; border-bottom: 1px solid #e7e5e4; font-size: 14px; }
+    .total-box { margin-left: auto; width: 280px; margin-bottom: 40px; }
+    .total-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; }
+    .total-row.grand { border-top: 2px solid #1c1917; font-size: 18px; font-weight: 800; padding-top: 12px; margin-top: 4px; }
+    .footer { border-top: 1px solid #e7e5e4; padding-top: 24px; text-align: center; font-size: 12px; color: #78716c; }
+    @media print {
+      body { padding: 20px; }
+      @page { margin: 15mm; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <div class="brand">Studio<span>Space</span>.</div>
+      <p style="color: #78716c; font-size: 12px; margin-top: 4px;">Peer-to-Peer Creative Production Sharing</p>
+    </div>
+    <div style="text-align: right;">
+      <span class="invoice-tag">Paid & Confirmed</span>
+      <p style="font-weight: 700; font-size: 16px; margin-top: 8px;">${invoiceNumber}</p>
+      <p style="color: #78716c; font-size: 12px;">Date: ${invoiceDate}</p>
+    </div>
+  </div>
+
+  <div class="meta-grid">
+    <div class="meta-block">
+      <h4>Billed To (Creator)</h4>
+      <p><strong>${user?.name || "Verified Creator"}</strong></p>
+      <p>${user?.email || ""}</p>
+      <p style="color: #78716c; font-size: 12px; margin-top: 4px;">Creator ID: ${user?.id || "Verified"}</p>
+    </div>
+    <div class="meta-block">
+      <h4>Production Location & Session</h4>
+      <p><strong>${booking.studioTitle}</strong></p>
+      <p>${booking.studioLocation}</p>
+      <p style="color: #f97316; font-size: 12px; margin-top: 4px; font-weight: 600;">Date: ${shootDate}</p>
+      <p style="color: #78716c; font-size: 12px;">Slot: ${shootTime} (${booking.hours} Hours)</p>
+    </div>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th style="text-align: center;">Hours</th>
+        <th style="text-align: right;">Rate / hr</th>
+        <th style="text-align: right;">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <strong>Studio Space Rental</strong><br/>
+          <span style="color: #78716c; font-size: 12px;">Full access to ${booking.studioTitle} for creative production.</span>
+        </td>
+        <td style="text-align: center;">${booking.hours} hrs</td>
+        <td style="text-align: right;">$${booking.hourlyRate}.00</td>
+        <td style="text-align: right;">$${booking.hourlyRate * booking.hours}.00</td>
+      </tr>
+      ${booking.securityDeposit > 0 ? `
+      <tr>
+        <td>
+          <strong>Refundable Security Deposit</strong><br/>
+          <span style="color: #78716c; font-size: 12px;">Held in escrow and refunded after successful wrap.</span>
+        </td>
+        <td style="text-align: center;">—</td>
+        <td style="text-align: right;">—</td>
+        <td style="text-align: right;">$${booking.securityDeposit}.00</td>
+      </tr>
+      ` : ""}
+    </tbody>
+  </table>
+
+  <div class="total-box">
+    <div class="total-row">
+      <span style="color: #78716c;">Subtotal:</span>
+      <span>$${booking.hourlyRate * booking.hours}.00</span>
+    </div>
+    ${booking.securityDeposit > 0 ? `
+    <div class="total-row">
+      <span style="color: #78716c;">Security Deposit:</span>
+      <span>$${booking.securityDeposit}.00</span>
+    </div>
+    ` : ""}
+    <div class="total-row grand">
+      <span>Total Paid:</span>
+      <span>$${booking.totalPrice}.00</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Thank you for creating with StudioSpace. For support inquiries, reach out to support@studiospace.com.</p>
+    <p style="margin-top: 4px;">StudioSpace Inc. • 420 Broome Street, New York, NY 10013</p>
+  </div>
+</body>
+</html>
+    `;
+
+    printWindow.document.open();
+    printWindow.document.write(html);
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => {
+      printWindow.print();
+    }, 350);
   };
 
   const isPendingExpired = (booking: Booking) => {
@@ -261,7 +414,17 @@ export default function MyBookingsPage() {
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {booking.status === "confirmed" && (
+                      <button
+                        type="button"
+                        onClick={() => handleDownloadInvoice(booking)}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-surface-secondary hover:border-foreground/30 transition-colors shadow-xs"
+                      >
+                        <FileText size={13} className="text-accent" />
+                        <span>PDF Invoice</span>
+                      </button>
+                    )}
                     <Link
                       href={`/studios/${booking.studioId}`}
                       className="rounded-full border border-border px-3.5 py-1.5 text-xs font-semibold hover:bg-surface-secondary"

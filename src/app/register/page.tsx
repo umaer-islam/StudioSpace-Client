@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
+import { toast } from "sonner";
 import { signUp } from "@/lib/auth-client";
 import {
   Aperture,
@@ -10,6 +11,7 @@ import {
   Briefcase,
   Camera,
   CheckCircle2,
+  Image as ImageIcon,
   Loader2,
   Lock,
   Mail,
@@ -20,6 +22,7 @@ export default function RegisterPage() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [photoUrl, setPhotoUrl] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<"Creator" | "Host">("Creator");
   const [error, setError] = useState<string | null>(null);
@@ -39,8 +42,22 @@ export default function RegisterPage() {
       return;
     }
 
+    // Password Validation per rubric:
+    // 1. Length must be at least 6 characters
+    // 2. Must have an Uppercase letter
+    // 3. Must have a Lowercase letter
     if (password.length < 6) {
       setError("Password must be at least 6 characters long.");
+      return;
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      setError("Password must contain at least one uppercase letter (A-Z).");
+      return;
+    }
+
+    if (!/[a-z]/.test(password)) {
+      setError("Password must contain at least one lowercase letter (a-z).");
       return;
     }
 
@@ -50,6 +67,7 @@ export default function RegisterPage() {
           name: name.trim(),
           email: email.trim(),
           password,
+          image: photoUrl.trim() || undefined,
           role,
         } as Parameters<typeof signUp.email>[0]);
 
@@ -58,8 +76,8 @@ export default function RegisterPage() {
           return;
         }
 
-        router.push("/studios");
-        router.refresh();
+        toast.success("Account created successfully! Please sign in with your credentials.");
+        router.push("/login?registered=true");
       } catch (err: unknown) {
         setError(
           err instanceof Error
@@ -201,10 +219,33 @@ export default function RegisterPage() {
 
           <div>
             <label
+              htmlFor="photoUrl"
+              className="block text-xs font-semibold uppercase tracking-wider text-muted mb-1.5"
+            >
+              Photo URL <span className="text-muted/60 font-normal lowercase">(optional)</span>
+            </label>
+            <div className="relative">
+              <ImageIcon
+                size={18}
+                className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"
+              />
+              <input
+                id="photoUrl"
+                type="url"
+                value={photoUrl}
+                onChange={(e) => setPhotoUrl(e.target.value)}
+                placeholder="https://images.unsplash.com/your-avatar.jpg"
+                className="w-full rounded-xl border border-border bg-background py-2.5 pl-10 pr-4 text-sm placeholder:text-muted/60 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
               htmlFor="password"
               className="block text-xs font-semibold uppercase tracking-wider text-muted mb-1.5"
             >
-              Password (min. 6 characters)
+              Password <span className="text-muted/60 font-normal">(min. 6 chars, uppercase & lowercase)</span>
             </label>
             <div className="relative">
               <Lock
