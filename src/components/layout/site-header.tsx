@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { useState, useRef, useEffect, Suspense } from "react";
+import { useState, useRef, useEffect, useCallback, Suspense } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import gsap from "gsap";
 import {
   Aperture,
   Menu,
@@ -53,10 +54,13 @@ function SiteHeaderContent() {
   const { resolvedTheme, setTheme } = useTheme();
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [renderMenu, setRenderMenu] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
   const { data: session } = useSession();
 
   const user = session?.user as
@@ -92,9 +96,91 @@ function SiteHeaderContent() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // GSAP Mobile Drawer Open & Close Functions
+  const openMobileMenu = () => {
+    setRenderMenu(true);
+    setMenuOpen(true);
+  };
+
+  const closeMobileMenu = useCallback(() => {
+    if (!mobileMenuRef.current) {
+      setMenuOpen(false);
+      setRenderMenu(false);
+      return;
+    }
+    setMenuOpen(false);
+
+    if (backdropRef.current) {
+      gsap.to(backdropRef.current, {
+        opacity: 0,
+        duration: 0.22,
+        ease: "power2.in",
+      });
+    }
+
+    gsap.to(mobileMenuRef.current, {
+      opacity: 0,
+      y: -12,
+      scale: 0.97,
+      duration: 0.22,
+      ease: "power2.in",
+      onComplete: () => {
+        setRenderMenu(false);
+      },
+    });
+  }, []);
+
+  // GSAP Staggered Entrance Animation when renderMenu mounts
+  useEffect(() => {
+    if (renderMenu && mobileMenuRef.current) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+      if (backdropRef.current) {
+        tl.fromTo(
+          backdropRef.current,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.25 },
+          0
+        );
+      }
+
+      tl.fromTo(
+        mobileMenuRef.current,
+        { opacity: 0, y: -16, scale: 0.96 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.35 },
+        0
+      )
+        .fromTo(
+          ".mobile-nav-item",
+          { opacity: 0, x: -14 },
+          { opacity: 1, x: 0, stagger: 0.045, duration: 0.25 },
+          "-=0.2"
+        )
+        .fromTo(
+          ".mobile-nav-footer",
+          { opacity: 0, y: 8 },
+          { opacity: 1, y: 0, duration: 0.25 },
+          "-=0.15"
+        );
+
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [renderMenu]);
+
+  // Close mobile drawer on route transition
+  useEffect(() => {
+    closeMobileMenu();
+  }, [pathname, closeMobileMenu]);
+
   const handleSignOut = async () => {
     await signOut();
     setDropdownOpen(false);
+    closeMobileMenu();
     router.push("/");
     router.refresh();
   };
@@ -312,112 +398,165 @@ function SiteHeaderContent() {
             </div>
           )}
 
-          {/* Mobile Hamburger Toggle Button */}
+          {/* Animated 2-Line Hamburger Menu Toggle */}
           <button
             type="button"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            onClick={() => (menuOpen ? closeMobileMenu() : openMobileMenu())}
+            aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={menuOpen}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-border md:hidden text-foreground hover:bg-surface-secondary transition-colors"
+            className="relative flex h-9 w-9 items-center justify-center rounded-full border border-border md:hidden text-foreground hover:bg-surface-secondary transition-colors"
           >
-            {menuOpen ? <X size={18} /> : <Menu size={18} />}
+            <div className="relative flex h-3.5 w-4 flex-col justify-between">
+              <span
+                className={`h-0.5 w-full rounded-full bg-foreground transition-all duration-300 ease-out origin-center ${
+                  menuOpen ? "translate-y-[6px] rotate-45" : ""
+                }`}
+              />
+              <span
+                className={`h-0.5 w-full rounded-full bg-foreground transition-all duration-300 ease-out origin-center ${
+                  menuOpen ? "-translate-y-[6px] -rotate-45" : ""
+                }`}
+              />
+            </div>
           </button>
         </div>
       </div>
 
-      {/* Mobile Drawer Menu */}
-      {menuOpen && (
-        <div className="mt-2 overflow-hidden rounded-3xl border border-border bg-background/95 p-5 backdrop-blur-2xl shadow-xl md:hidden animate-in fade-in slide-in-from-top-2 duration-200">
-          <nav className="flex flex-col gap-2">
+      {/* Mobile Backdrop Overlay with Ambient Blur */}
+      {renderMenu && (
+        <div
+          ref={backdropRef}
+          aria-hidden="true"
+          onClick={closeMobileMenu}
+          className="fixed inset-0 -z-10 bg-black/40 backdrop-blur-xs md:hidden"
+        />
+      )}
+
+      {/* GSAP-Animated Mobile Drawer Menu */}
+      {renderMenu && (
+        <div
+          ref={mobileMenuRef}
+          className="mt-2 overflow-hidden rounded-3xl border border-border bg-surface/98 p-5 shadow-2xl backdrop-blur-2xl md:hidden will-change-transform"
+        >
+          {/* Header inside drawer */}
+          <div className="flex items-center justify-between pb-3.5 mb-2 border-b border-border/70">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-muted">
+              Navigation
+            </span>
+            <span className="rounded-full bg-accent/10 px-2.5 py-0.5 text-[10px] font-bold text-accent">
+              Explore Studios
+            </span>
+          </div>
+
+          <nav className="flex flex-col gap-1.5">
             {navigation.map((item) => {
               const active = isActiveRoute(item.href);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  onClick={() => setMenuOpen(false)}
-                  className={`flex items-center justify-between rounded-2xl px-4 py-2.5 text-xs font-semibold transition-colors ${
+                  onClick={closeMobileMenu}
+                  className={`mobile-nav-item flex items-center justify-between rounded-2xl px-4 py-3 text-xs font-semibold transition-all duration-200 active:scale-[0.98] ${
                     active
-                      ? "bg-surface-secondary text-foreground font-bold"
-                      : "text-muted hover:text-foreground hover:bg-surface-secondary/60"
+                      ? "bg-foreground text-background font-bold shadow-xs"
+                      : "text-foreground hover:bg-surface-secondary"
                   }`}
                 >
-                  <span>{item.label}</span>
-                  {active && (
-                    <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                  <span className="text-sm">{item.label}</span>
+                  {active ? (
+                    <span className="h-2 w-2 rounded-full bg-accent" />
+                  ) : (
+                    <ChevronDown size={14} className="text-muted -rotate-90" />
                   )}
                 </Link>
               );
             })}
 
             {user ? (
-              <div className="mt-3 border-t border-border pt-4 space-y-2">
-                <div className="flex items-center justify-between px-2 py-1">
-                  <div>
-                    <p className="text-xs font-bold">{user.name}</p>
-                    <p className="text-[11px] text-muted">{user.email}</p>
+              <div className="mobile-nav-footer mt-3 border-t border-border pt-4 space-y-2">
+                <div className="flex items-center justify-between rounded-2xl bg-surface-secondary p-3">
+                  <div className="flex items-center gap-2.5">
+                    {user.image ? (
+                      <div className="relative h-8 w-8 overflow-hidden rounded-full">
+                        <Image
+                          src={user.image}
+                          alt={user.name || "User"}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-foreground text-xs font-bold text-background">
+                        {user.name ? user.name.charAt(0).toUpperCase() : <User size={14} />}
+                      </span>
+                    )}
+                    <div className="max-w-[150px] truncate">
+                      <p className="text-xs font-bold text-foreground truncate">{user.name}</p>
+                      <p className="text-[10px] text-muted truncate">{user.email}</p>
+                    </div>
                   </div>
-                  <span className="rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-bold text-accent uppercase">
+                  <span className="rounded-full bg-foreground px-2 py-0.5 text-[10px] font-bold text-background uppercase">
                     {user.role}
                   </span>
                 </div>
 
                 <Link
                   href="/bookings"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-2 rounded-2xl px-3 py-2 text-xs font-semibold hover:bg-surface-secondary"
+                  onClick={closeMobileMenu}
+                  className="flex items-center gap-2.5 rounded-2xl px-3 py-2.5 text-xs font-semibold hover:bg-surface-secondary text-foreground"
                 >
-                  <LayoutDashboard size={14} className="text-muted" /> Dashboard
+                  <LayoutDashboard size={15} className="text-muted" /> Dashboard
                 </Link>
 
                 <Link
                   href="/add-studio"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-2 rounded-2xl px-3 py-2 text-xs font-semibold text-accent hover:bg-accent/10"
+                  onClick={closeMobileMenu}
+                  className="flex items-center gap-2.5 rounded-2xl px-3 py-2.5 text-xs font-semibold text-accent hover:bg-accent/10"
                 >
-                  <PlusCircle size={14} /> Add New Studio
+                  <PlusCircle size={15} /> Add New Studio
                 </Link>
 
                 <Link
                   href="/my-listings"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-2 rounded-2xl px-3 py-2 text-xs font-semibold hover:bg-surface-secondary"
+                  onClick={closeMobileMenu}
+                  className="flex items-center gap-2.5 rounded-2xl px-3 py-2.5 text-xs font-semibold hover:bg-surface-secondary text-foreground"
                 >
-                  <Building2 size={14} className="text-muted" /> My Studio Listings
+                  <Building2 size={15} className="text-muted" /> My Studio Listings
                 </Link>
 
                 <Link
                   href="/my-bookings"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-2 rounded-2xl px-3 py-2 text-xs font-semibold hover:bg-surface-secondary"
+                  onClick={closeMobileMenu}
+                  className="flex items-center gap-2.5 rounded-2xl px-3 py-2.5 text-xs font-semibold hover:bg-surface-secondary text-foreground"
                 >
-                  <Calendar size={14} className="text-muted" /> My Bookings
+                  <Calendar size={15} className="text-muted" /> My Bookings
                 </Link>
 
                 <button
                   type="button"
                   onClick={handleSignOut}
-                  className="flex w-full items-center gap-2 rounded-2xl px-3 py-2 text-xs font-semibold text-red-600 hover:bg-red-500/10"
+                  className="flex w-full items-center gap-2.5 rounded-2xl px-3 py-2.5 text-xs font-semibold text-red-600 hover:bg-red-500/10 transition-colors"
                 >
-                  <LogOut size={14} /> Logout
+                  <LogOut size={15} /> Logout
                 </button>
               </div>
             ) : (
-              <div className="mt-3 grid grid-cols-2 gap-2 border-t border-border pt-4">
+              <div className="mobile-nav-footer mt-4 grid grid-cols-2 gap-2.5 border-t border-border pt-4">
                 <Link
                   href="/login"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center justify-center rounded-2xl border border-border py-2.5 text-xs font-semibold hover:bg-surface-secondary"
+                  onClick={closeMobileMenu}
+                  className="flex items-center justify-center rounded-2xl border border-border py-3 text-xs font-bold hover:bg-surface-secondary text-foreground transition-colors active:scale-95"
                 >
                   Log In
                 </Link>
                 <Link
                   href="/register"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center justify-center gap-1.5 rounded-2xl bg-neutral-900 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-black active:scale-[0.98] dark:bg-white dark:text-neutral-900"
+                  onClick={closeMobileMenu}
+                  className="group relative flex items-center justify-center gap-1.5 overflow-hidden rounded-2xl bg-neutral-900 py-3 text-xs font-bold text-white shadow-sm transition-all hover:bg-black active:scale-95 dark:bg-white dark:text-neutral-900"
                 >
-                  <span>Register</span>
-                  <ArrowUpRight size={13} />
+                  <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full pointer-events-none" />
+                  <span className="relative z-10 font-bold">Register</span>
+                  <ArrowUpRight size={13} className="relative z-10" />
                 </Link>
               </div>
             )}
