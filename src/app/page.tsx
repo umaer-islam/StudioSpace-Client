@@ -83,68 +83,65 @@ export default function Home() {
       {/* ANIMATED CINEMATIC HERO SHOWCASE */}
       <HeroShowcase />
 
-      {/* SCROLL-TRIGGERED THREE-LINE MANIFESTO STATEMENT */}
-      <section className="relative overflow-hidden border-b border-border/70 bg-surface/40 py-16 sm:py-20 md:py-24" aria-label="Brand statement">
-        {/* Subtle decorative radial glow */}
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-40 dark:opacity-20">
-          <div className="h-64 w-96 rounded-full bg-accent/15 blur-3xl" />
-        </div>
-
-        <div className="container-main relative z-10 max-w-4xl text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3.5 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-accent shadow-2xs">
-            <span>A STUDIO FOR EVERY VISION</span>
-          </div>
-
-          <div className="flex flex-col items-center gap-3 sm:gap-4 md:gap-5">
-            {/* Line 1: Bold architectural opening */}
-            <BlurText
-              text="Where architectural daylight meets acoustic perfection."
-              effect="blur"
-              animateBy="words"
-              direction="bottom"
-              staggerFrom="start"
-              trigger="view"
-              delay={40}
-              stepDuration={0.4}
-              blur={12}
-              distance={30}
-              threshold={0.15}
-              className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-foreground justify-center text-center leading-[1.18]"
-            />
-
-            {/* Line 2: Descriptive craft bridge */}
-            <BlurText
-              text="From soundproof music tracking suites to cinema-grade soundstages."
-              effect="blur"
-              animateBy="words"
-              direction="bottom"
-              staggerFrom="start"
-              trigger="view"
-              delay={35}
-              stepDuration={0.38}
-              blur={10}
-              distance={25}
-              threshold={0.15}
-              className="text-lg sm:text-2xl md:text-3xl font-semibold tracking-tight text-muted justify-center text-center leading-snug"
-            />
-
-            {/* Line 3: Signature promise with tilt accent */}
-            <BlurText
-              text="Instant hourly bookings. Zero double reservations. Completely yours."
-              effect="tilt"
-              animateBy="words"
-              direction="bottom"
-              staggerFrom="start"
-              trigger="view"
-              delay={45}
-              stepDuration={0.42}
-              blur={8}
-              distance={35}
-              fromColor="#d97745"
-              threshold={0.15}
-              className="text-base sm:text-xl md:text-2xl font-bold tracking-tight text-accent justify-center text-center mt-1 sm:mt-2"
-            />
-          </div>
+      {/* LARGE SANS-SERIF EDITORIAL BLUR TEXT (3-4 LINES) */}
+      <section className="container-main py-16 sm:py-24 md:py-32">
+        <div className="max-w-5xl mx-auto flex flex-col gap-2 sm:gap-3 md:gap-4 font-sans">
+          <BlurText
+            text="Where natural daylight meets acoustic precision."
+            effect="blur"
+            animateBy="words"
+            direction="bottom"
+            staggerFrom="start"
+            trigger="view"
+            delay={40}
+            stepDuration={0.4}
+            blur={10}
+            distance={25}
+            threshold={0.15}
+            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-sans font-bold tracking-tight text-foreground leading-[1.12]"
+          />
+          <BlurText
+            text="From broadcast stages to analog music suites."
+            effect="blur"
+            animateBy="words"
+            direction="bottom"
+            staggerFrom="start"
+            trigger="view"
+            delay={35}
+            stepDuration={0.4}
+            blur={10}
+            distance={25}
+            threshold={0.15}
+            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-sans font-bold tracking-tight text-foreground/80 leading-[1.12]"
+          />
+          <BlurText
+            text="Booked by the hour with zero double reservations."
+            effect="blur"
+            animateBy="words"
+            direction="bottom"
+            staggerFrom="start"
+            trigger="view"
+            delay={35}
+            stepDuration={0.4}
+            blur={10}
+            distance={25}
+            threshold={0.15}
+            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-sans font-bold tracking-tight text-foreground/60 leading-[1.12]"
+          />
+          <BlurText
+            text="Built for creators who refuse to compromise."
+            effect="blur"
+            animateBy="words"
+            direction="bottom"
+            staggerFrom="start"
+            trigger="view"
+            delay={40}
+            stepDuration={0.4}
+            blur={10}
+            distance={25}
+            threshold={0.15}
+            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-sans font-bold tracking-tight text-accent leading-[1.12]"
+          />
         </div>
       </section>
 
