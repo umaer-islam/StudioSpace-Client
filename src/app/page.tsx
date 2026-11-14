@@ -13,9 +13,9 @@ import {
 } from "lucide-react";
 import { FeaturedStudios } from "@/components/home/featured-studios";
 import { HeroShowcase } from "@/components/home/hero-showcase";
+import { ScrollBlurStatement } from "@/components/home/scroll-blur-statement";
 import { AnimatedContent } from "@/components/react-bits/animated-content";
 import { TextLoop } from "@/components/react-bits/text-loop";
-import { BlurText } from "@/components/react-bits/blur-text";
 
 const categories = [
   {
@@ -83,67 +83,8 @@ export default function Home() {
       {/* ANIMATED CINEMATIC HERO SHOWCASE */}
       <HeroShowcase />
 
-      {/* LARGE SANS-SERIF EDITORIAL BLUR TEXT (3-4 LINES) */}
-      <section className="container-main py-16 sm:py-24 md:py-32">
-        <div className="max-w-5xl mx-auto flex flex-col gap-2 sm:gap-3 md:gap-4 font-sans">
-          <BlurText
-            text="Where natural daylight meets acoustic precision."
-            effect="blur"
-            animateBy="words"
-            direction="bottom"
-            staggerFrom="start"
-            trigger="view"
-            delay={40}
-            stepDuration={0.4}
-            blur={10}
-            distance={25}
-            threshold={0.15}
-            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-sans font-bold tracking-tight text-foreground leading-[1.12]"
-          />
-          <BlurText
-            text="From broadcast stages to analog music suites."
-            effect="blur"
-            animateBy="words"
-            direction="bottom"
-            staggerFrom="start"
-            trigger="view"
-            delay={35}
-            stepDuration={0.4}
-            blur={10}
-            distance={25}
-            threshold={0.15}
-            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-sans font-bold tracking-tight text-foreground/80 leading-[1.12]"
-          />
-          <BlurText
-            text="Booked by the hour with zero double reservations."
-            effect="blur"
-            animateBy="words"
-            direction="bottom"
-            staggerFrom="start"
-            trigger="view"
-            delay={35}
-            stepDuration={0.4}
-            blur={10}
-            distance={25}
-            threshold={0.15}
-            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-sans font-bold tracking-tight text-foreground/60 leading-[1.12]"
-          />
-          <BlurText
-            text="Built for creators who refuse to compromise."
-            effect="blur"
-            animateBy="words"
-            direction="bottom"
-            staggerFrom="start"
-            trigger="view"
-            delay={40}
-            stepDuration={0.4}
-            blur={10}
-            distance={25}
-            threshold={0.15}
-            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-sans font-bold tracking-tight text-accent leading-[1.12]"
-          />
-        </div>
-      </section>
+      {/* SCROLL-RESPONSIVE EDITORIAL STATEMENT (REVEAL & DISAPPEAR WITH SCROLL) */}
+      <ScrollBlurStatement />
 
       {/* CATEGORIES */}
       <section className="section-padding">
